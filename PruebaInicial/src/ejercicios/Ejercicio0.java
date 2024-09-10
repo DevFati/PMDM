@@ -1,0 +1,15 @@
+package ejercicios;
+
+import java.util.Scanner;
+
+public class Ejercicio0 {
+	
+	public static void main(String[] args) {
+		Scanner x=new Scanner(System.in);
+		
+		System.out.println("Introduce el numero de millas: ");
+		int n=x.nextInt();
+		float b=((float) n*1852/1000);
+		System.out.println("El numero de kilometros es: "+b);
+	}
+}

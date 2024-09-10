@@ -1,0 +1,22 @@
+package ejercicios;
+
+import java.util.Scanner;
+
+public class Ejercicio1 {
+
+	public static void main(String[] args) {
+		Scanner teclado=new Scanner(System.in);
+		
+		System.out.println("Introduce los siguientes datos: ");
+		System.out.print("Introduce el dato a: ");
+		int a=teclado.nextInt();
+		System.out.print("Introduce el dato b: ");
+		int b=teclado.nextInt();
+		System.out.print("Introduce el dato c: ");
+		int c=teclado.nextInt();
+		
+		float resultado1=((float)((-b+Math.sqrt(Math.pow(a, 2)-4*a*c))/2*a));
+		float resultado2=((float)((-b-Math.sqrt(Math.pow(a, 2)-4*a*c))/2*a));
+		
+	}
+}
