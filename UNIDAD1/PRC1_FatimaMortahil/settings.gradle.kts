@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CronometroTabata"
+rootProject.name = "PRC1_FatimaMortahil"
 include(":app")
  
