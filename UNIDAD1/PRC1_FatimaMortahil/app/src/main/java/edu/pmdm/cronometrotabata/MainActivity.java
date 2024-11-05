@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private ConstraintLayout mainLayout; //Layout principal
     private TextView txtEstado,txtContador,txtSeriesLeft; //Vistas de texto
     private EditText edtxtSeries,edtxtTrabajo, edtxtDescanso; //Campos de entrada
-    private MediaPlayer sonidoBeep, sonidoGong; //Sonidos para el entrenamiento
 
 
 
@@ -75,13 +74,17 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Validar campos de entrada
-        if(TextUtils.isEmpty(edtxtSeries.getText())|| TextUtils.isEmpty(edtxtTrabajo.getText())|| TextUtils.isEmpty(edtxtDescanso.getText())){
+        if(TextUtils.isEmpty(edtxtSeries.getText())||
+                TextUtils.isEmpty(edtxtTrabajo.getText())|| TextUtils.isEmpty(edtxtDescanso.getText())){
             btnStart.setEnabled(true); //Rehabilitar el botón si hay campos vacíos.
-            Toast.makeText(this, "Todos los campos son obligatorios.", Toast.LENGTH_SHORT).show(); //Mensaje emergente
+            Toast.makeText(this, "Todos los campos son obligatorios.", Toast.LENGTH_SHORT).show();
+            //Mensaje emergente
             return; //Si el método startCycle() encuentra que alguno de los campos
             //está vacío, ejecuta "return;", lo que significa que no continuará
             //procesando el resto del código en startCycle();
         }
+
+
         //Convertir los textos a enteros
         int series=Integer.parseInt(edtxtSeries.getText().toString());
         int tiempoTrabajo=Integer.parseInt(edtxtTrabajo.getText().toString());
@@ -90,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
         //Validar que los valores sean mayores que cero
         if(series==0|| tiempoTrabajo==0|| tiempoDescanso==0){
             btnStart.setEnabled(true); //Rehabilitar el botón si hay valores inválidos
-            Toast.makeText(this, "Los valores deben ser mayores que cero.", Toast.LENGTH_SHORT).show(); //Mensaje emergente
+            Toast.makeText(this, "Los valores deben ser mayores que cero.", Toast.LENGTH_SHORT).show();
+            //Mensaje emergente
             return;
             //Si el método startCycle() encuentra que alguno de los campos
             //es 0 ejecuta el "return;", lo que significa que no continuará
@@ -111,8 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Inicializar sonidos
 
-        MediaPlayer sonidoBeep= MediaPlayer.create(this,R.raw.beep);
-        MediaPlayer sonidoGong= MediaPlayer.create(this,R.raw.gong);
+        MediaPlayer sonidoBeep=MediaPlayer.create(getApplicationContext(),R.raw.beep);
         sonidoBeep.start(); //Reproducir sonido de inicio.
 
         //Contador para la fase de trabajo.
@@ -150,19 +153,17 @@ public class MainActivity extends AppCompatActivity {
                         //Si quedan series, continuar el ciclo
                         if(series>1){
                             cicloSesion((series-1),tiempoTrabajo,tiempoDescanso);
-                        }else{
+                        }else {
                             //Finalizar entrenamiento
-                            ImageButton btnStart=(ImageButton) findViewById(R.id.imgbtn);
+                            ImageButton btnStart = (ImageButton) findViewById(R.id.imgbtn);
                             btnStart.setEnabled(true); //Rehabilitar el botón
+                            MediaPlayer sonidoGong = MediaPlayer.create(getApplicationContext(), R.raw.gong);
+
                             sonidoGong.start(); //Reproducir sonido de finalización
                             mainLayout.setBackgroundColor(Color.WHITE); //Restablecer fondo a blanco
-
                             txtEstado.setText("FINISHED!"); //Mensaje de finalización
-
                             txtSeriesLeft.setText("Series Left: 0"); //Actualizar series restantes
                         }
-
-
                     }
                 }.start();
 

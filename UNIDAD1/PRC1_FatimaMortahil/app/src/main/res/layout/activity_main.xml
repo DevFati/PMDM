@@ -12,7 +12,6 @@
         android:layout_width="124dp"
         android:layout_height="51dp"
         android:ems="10"
-
         android:hint="Series"
         android:inputType="number"
         android:textSize="22sp"
@@ -79,6 +78,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/button_background"
+        android:contentDescription="Botón play"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
