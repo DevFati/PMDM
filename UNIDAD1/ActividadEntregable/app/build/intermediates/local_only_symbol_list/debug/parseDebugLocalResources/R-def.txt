@@ -1,0 +1,22 @@
+R_DEF: Internal format may change without notice
+local
+color black
+color white
+drawable ic_launcher_background
+drawable ic_launcher_foreground
+id edttxtDescanso
+id edtxtSeries
+id edtxtTrabajo
+id imgbtn
+id main
+id txtContador
+id txtSeriesL
+id txtWR
+layout activity_main
+mipmap ic_launcher
+mipmap ic_launcher_round
+string app_name
+style Base.Theme.CronometroTabata
+style Theme.CronometroTabata
+xml backup_rules
+xml data_extraction_rules
