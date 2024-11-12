@@ -32,7 +32,7 @@
         app:layout_constraintVertical_bias="0.203" />
 
     <EditText
-        android:id="@+id/editTextNumber2"
+        android:id="@+id/edtEdad"
         android:layout_width="211dp"
         android:layout_height="48dp"
         android:ems="10"
@@ -45,7 +45,7 @@
         app:layout_constraintVertical_bias="0.195" />
 
     <EditText
-        android:id="@+id/editTextText3"
+        android:id="@+id/edtNombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -69,20 +69,20 @@
         app:layout_constraintVertical_bias="0.462">
 
         <RadioButton
-            android:id="@+id/radioButton2"
+            android:id="@+id/rbgato"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Gato" />
 
         <RadioButton
-            android:id="@+id/radioButton3"
+            android:id="@+id/rbPerro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Perro" />
     </RadioGroup>
 
     <EditText
-        android:id="@+id/editTextText4"
+        android:id="@+id/edtCiudad"
         android:layout_width="232dp"
         android:layout_height="48dp"
         android:ems="10"
@@ -119,7 +119,7 @@
         app:layout_constraintVertical_bias="0.105" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btnGuardar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Guardar"
