@@ -62,7 +62,7 @@ EditText mensaje;
                 String mensajes=mensaje.getText().toString();
 
                 Intent intent= new Intent(ConfigActivity.this,MainActivity.class);
-                intent.putExtra("correoD",correos,"asuntoD",asuntos,"mensajeD",mensajes); //pasamos lo que esta dentro como un extra
+               // intent.putExtra("correoD",correos,"asuntoD",asuntos,"mensajeD",mensajes); //pasamos lo que esta dentro como un extra
                 setResult(RESULT_OK,intent);
                 finish();
             }
