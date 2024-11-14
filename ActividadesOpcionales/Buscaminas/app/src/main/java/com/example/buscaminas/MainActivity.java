@@ -36,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
         tablero=new int[filas][columnas];
         colocarMinas(minas,filas,columnas);
         dibujarTablero(filas,columnas);
-
+        gridLayout.setColumnCount(columnas);
+        gridLayout.setRowCount(filas);
 
     }
 
@@ -60,10 +61,53 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean marcarCasilla(int i, int j) {
+
         return true;
     }
 
-    private void mostrarCasilla(int i, int j) {
+    private void mostrarCasilla(int fila, int columna) {
+        if(tablero[fila][columna]==-1){
+            //pierde
+            mostrarMina(fila,columna);
+            partidaPerdida(false);
+        }else{
+            mostrarCelda(fila,columna);
+            if(gano()){
+                partidaPerdida(true);
+            }
+        }
+    }
+
+    private void mostrarCelda(int fila, int columna) {
+        if(descubierta[fila][columna]){
+            return;
+        }
+        descubierta[fila][columna]=true;
+
+        Button celda= (Button) gridLayout.getChildAt(fila*gridLayout.getColumnCount()+columna);
+        if(tablero[fila][columna]>0){
+            celda.setText(String.valueOf(tablero[fila][columna]));
+        }else{
+            celda.setText("");
+            descubrirCeldasAlrededor(fila,columna);
+        }
+        celda.setEnabled(false);
+    }
+
+    private void descubrirCeldasAlrededor(int fila, int columna) {
+        for(int i=-1;i<=1;i++){
+            for(int j=-1;j<=1;j++){
+                int nuevaFila=fila+i;
+                int nuevaCol=columna+j;
+                if(celdaValida(nuevaFila,nuevaCol)&& tablero[nuevaFila][nuevaCol]!=-1){
+                    mostrarCelda(nuevaFila,nuevaCol);
+                }
+            }
+        }
+    }
+
+    private boolean celdaValida(int fil, int col) {
+        return fil>=0 && fil<gridLayout.getRowCount() && col>=0 && col<gridLayout.getColumnCount();
     }
 
     private void colocarMinas(int minas, int filas, int columnas) {
@@ -80,8 +124,5 @@ public class MainActivity extends AppCompatActivity {
                     cont++;
                 }
             }while(cont<minas);
-
-
-
     }
 }
