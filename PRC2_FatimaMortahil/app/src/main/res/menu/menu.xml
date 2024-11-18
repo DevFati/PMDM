@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xmlns.app="http://schemas.android.com/tools">
+
+    <item android:title="Instrucciones"
+        android:id="@+id/instrucciones"/>
+    <item android:title="Reiniciar"
+        android:id="@+id/reiniciar"/>
+    <item android:title="Configurar el juego"
+        android:id="@+id/configJuego"/>
+    <item
+        android:id="@+id/seleccionaPersonaje"
+        android:icon="@drawable/minaclasica"
+        android:title="Selecciona el personaje"
+        app:showAsAction="always" />
+
+
+</menu>
