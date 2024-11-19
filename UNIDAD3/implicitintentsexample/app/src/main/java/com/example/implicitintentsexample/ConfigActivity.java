@@ -43,8 +43,13 @@ EditText mensaje;
             public void onClick(View view) {
                 dataurl=url.getText().toString();
                 String urlDefinitiva;
-                if(Patterns.WEB_URL.matcher(dataurl).matches()){
-                    urlDefinitiva=dataurl; //Significa que escribio bien la url
+                if(validarURL(dataurl)){
+                    if (!dataurl.startsWith("http://") && !dataurl.startsWith("https://")) {
+                        urlDefinitiva = "https://" + dataurl; // Añadimos esquema si falta
+                    } else {
+                        urlDefinitiva = dataurl; //significa que esta completa y correcta
+                    }
+
                 }else{
                     urlDefinitiva="https://www.google.com/search?q="+dataurl; //lo buscamos en google
                 }
@@ -83,5 +88,19 @@ EditText mensaje;
             }
         });
 
+
+
+
     }
+
+
+
+    public boolean validarURL(String s) {
+        //se restrinje a tld comunes porque por ejemplo sino me dejaria buscar "gato.www" que no existe como url valida
+        return s.matches("^(https?:\\/\\/)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+(com|org|net|edu|gov|io|co|us|info)$");
+    }
+
+
+
+
 }

@@ -21,7 +21,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 Button botonfoto;
-String url="google.com"; //Si el usuario no pone nada, esta sera la url por defecto
+String url="https://www.google.com"; //Si el usuario no pone nada, esta sera la url por defecto
 Button config;
 Button mail;
 String email,asunto,mensaje;
@@ -55,10 +55,6 @@ private ActivityResultLauncher<Intent> configLauncher;
                         url=durl; //Si no es nula pues
                         //cogemos el valor introducido por el usuario
                     }
-
-
-
-
                 }
 
             }
