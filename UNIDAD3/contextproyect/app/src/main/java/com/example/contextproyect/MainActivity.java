@@ -1,7 +1,5 @@
 package com.example.contextproyect;
-
-import android.app.AlarmManager;
-import android.app.PendingIntent;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,7 +28,9 @@ public class MainActivity extends AppCompatActivity {
     private Button botonFondoAzul;
     private Button botonRojo;
     private Button botonMorado;
-
+    //Creamos una lista de colores para la paleta de colores para el cambio de fondo de todos los
+    //botones de la mainActivity.
+    private int[] paleta={Color.RED,Color.BLUE,Color.GREEN,Color.YELLOW,Color.CYAN,Color.MAGENTA,Color.GRAY,Color.BLACK};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
 
         // Inicializar AudioManager para gestionar el volumen del dispositivo
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -69,7 +71,26 @@ public class MainActivity extends AppCompatActivity {
          * @return SharedPreferences El objeto SharedPreferences para leer y guardar datos.
          */
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        // leer el color guardado para los botones
+        int colorGuardado = sharedPreferences.getInt("fondoBtn", Color.MAGENTA);
+        //Boton para permitir abrir la paleta de colores para elegir uno y
+        //cambiar el fondo de los botones
+        // aplicamos el color guardado a los botones
+        botonRojo = findViewById(R.id.btnRojo);
+        botonMorado = findViewById(R.id.btnMorado);
+        botonFondoBlanco=findViewById(R.id.buttonBlanco);
+        botonFondoAzul=findViewById(R.id.buttonAzul);
+        botonFondoBlanco.setBackgroundColor(colorGuardado);
+        botonFondoAzul.setBackgroundColor(colorGuardado);
+        botonRojo.setBackgroundColor(colorGuardado);
+        botonMorado.setBackgroundColor(colorGuardado);
 
+        Button botonPaleta=findViewById(R.id.buttonPaleta);
+        // sharedPreferences era para guardar los valores  siempre que se vuelva a ejecutar la app
+
+        botonPaleta.setOnClickListener(v ->{
+            mostrarPaleta(sharedPreferences);
+        });
         // Leer el volumen guardado de SharedPreferences, o usar el volumen actual si no hay ninguno guardado
         int savedVolume = sharedPreferences.getInt("audioLevel", audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         volumeSeekBar.setProgress(savedVolume);
@@ -153,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+/*
         //el boton rojo del que cambiaremos el fondo
         botonRojo=findViewById(R.id.btnRojo);
         botonMorado=findViewById(R.id.btnMorado);
@@ -190,10 +211,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
+*/
 
         // Botón para leer el volumen guardado
         Button buttonReadVolume = findViewById(R.id.buttonReadVolume);
@@ -208,7 +226,32 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, SecondActivity.class);
             startActivity(intent);
         });
+    }
 
+    private void mostrarPaleta(SharedPreferences s){
+    String[] nombreColores={"Rojo","Azul","Verde","Amarillo","Cian","Morado","Gris","Negro"};
 
+    //El alertDialog para la paleta
+        new AlertDialog.Builder(this)
+                .setTitle("Elige un color para el fondo de los botones")
+                .setItems(nombreColores,(dialog, which) -> {
+                    int colorSeleccionado=paleta[which];
+
+                    botonMorado.setBackgroundColor(colorSeleccionado);
+                    botonRojo.setBackgroundColor(colorSeleccionado);
+                    botonFondoAzul.setBackgroundColor(colorSeleccionado);
+                    botonFondoBlanco.setBackgroundColor(colorSeleccionado);
+
+                    //Guardamos el color que eligio el usuario en sharedPreferences
+
+                    SharedPreferences.Editor e=s.edit();
+                    //metemos la clave, y el indice del color seleccionado
+                    e.putInt("fondoBtn",colorSeleccionado);
+                    e.apply();
+
+                    //confirmalo
+                    Toast.makeText(this,"Color seleccionado: "+nombreColores[which],Toast.LENGTH_SHORT).show();
+                })
+                .show();
     }
 }

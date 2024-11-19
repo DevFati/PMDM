@@ -2,9 +2,11 @@ package com.example.implicitintentsexample;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,15 +42,21 @@ EditText mensaje;
             @Override
             public void onClick(View view) {
                 dataurl=url.getText().toString();
-
-                Intent intent= new Intent(ConfigActivity.this,MainActivity.class);
-                intent.putExtra("urlClave",dataurl); //pasamos lo que esta dentro como un extra
+                String urlDefinitiva;
+                if(Patterns.WEB_URL.matcher(dataurl).matches()){
+                    urlDefinitiva=dataurl; //Significa que escribio bien la url
+                }else{
+                    urlDefinitiva="https://www.google.com/search?q="+dataurl; //lo buscamos en google
+                }
+                //Devolvemos ressultado a MainActivity
+                Intent intent= new Intent();
+                intent.putExtra("urlClave",urlDefinitiva); //pasamos lo que esta dentro como un extra
                 setResult(RESULT_OK,intent);
                 finish();
             }
         });
 
-
+        //Boton para guardar mail
         enviaremail=findViewById(R.id.btnmail);
         enviaremail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,8 +69,15 @@ EditText mensaje;
                 String asuntos=asunto.getText().toString();
                 String mensajes=mensaje.getText().toString();
 
-                Intent intent= new Intent(ConfigActivity.this,MainActivity.class);
-               // intent.putExtra("correoD",correos,"asuntoD",asuntos,"mensajeD",mensajes); //pasamos lo que esta dentro como un extra
+                //Validamos correo
+                if(!Patterns.EMAIL_ADDRESS.matcher(correos).matches()){
+                    Toast.makeText(ConfigActivity.this,"Email incorrecto",Toast.LENGTH_SHORT).show();
+                return; //No seguimos
+                }
+                Intent intent= new Intent();
+                intent.putExtra("correo",correos);
+                intent.putExtra("asunto",asuntos);
+                intent.putExtra("mensaje",mensajes);
                 setResult(RESULT_OK,intent);
                 finish();
             }

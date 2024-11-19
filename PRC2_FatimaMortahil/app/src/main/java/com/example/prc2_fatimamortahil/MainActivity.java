@@ -221,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
      * @return el recurso gráfico del personaje seleccionado por el usuario.
      */
     public int getRecursoPersonaje() {
+
         return recursosPersonajes[personajeSeleccionadoIndice];
     }
 

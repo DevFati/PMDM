@@ -7,6 +7,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
@@ -20,9 +21,11 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 Button botonfoto;
-String url;
+String url="google.com"; //Si el usuario no pone nada, esta sera la url por defecto
 Button config;
 Button mail;
+String email,asunto,mensaje;
+//para recibir los datos de ConfigActivity
 private ActivityResultLauncher<Intent> configLauncher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +37,7 @@ private ActivityResultLauncher<Intent> configLauncher;
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        url="google.com";
+     //Configuramos el activityresultlauncher
     configLauncher=registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -43,7 +46,18 @@ private ActivityResultLauncher<Intent> configLauncher;
             if(o.getResultCode()==RESULT_OK){
                 Intent data=o.getData();
                 if(data!=null){
-                     url=data.getStringExtra("urlClave");
+                     String durl=data.getStringExtra("urlClave"); //leemos URL
+                     email=data.getStringExtra("correo");
+                     asunto=data.getStringExtra("asunto");
+                     mensaje=data.getStringExtra("mensaje");
+
+                    if(durl!=null){
+                        url=durl; //Si no es nula pues
+                        //cogemos el valor introducido por el usuario
+                    }
+
+
+
 
                 }
 
@@ -55,29 +69,25 @@ private ActivityResultLauncher<Intent> configLauncher;
         Button btnAbrirWeb = findViewById(R.id.btnAbrirWeb);
         btnAbrirWeb.setOnClickListener(v -> {
             // Crear un intent implícito para abrir una página web
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://"+url));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);
         });
 
         // Botón para enviar mail
         mail  = findViewById(R.id.btnenviarmail);
         mail.setOnClickListener(v -> {
+            if(email==null || asunto==null || mensaje==null || email.isEmpty() || asunto.isEmpty() || mensaje.isEmpty()){
+
+                Toast.makeText(MainActivity.this, "Todos los elementos del mail tienen que estar rellenados", Toast.LENGTH_SHORT).show();
+                return;
+            }
             // Crear un intent implícito para abrir un mail
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("abc@gmail.com"));
-            intent.setClassName("com.google.android.gm", "com.google.android.gm.ComposeActivityGmail");
-            intent.putExtra(Intent.EXTRA_CC, new String[]{"xyz@gmail.com"});
-            intent.putExtra(Intent.EXTRA_BCC, new String[]{"pqr@gmail.com"});
-            intent.putExtra(Intent.EXTRA_SUBJECT, "your subject goes here...");
-            intent.putExtra(Intent.EXTRA_TEXT, "Your message content goes here...");
-
-            startActivity(intent);
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:"+email)); // se usa mailto para que solo nos muestre apps de mensajeria
+            intent.putExtra(Intent.EXTRA_SUBJECT,asunto);
+            intent.putExtra(Intent.EXTRA_TEXT,mensaje);
+            startActivity(Intent.createChooser(intent,"Enviar email..."));
         });
-
-
-
-
-
 
 
         // Botón para realizar una llamada
@@ -98,14 +108,10 @@ private ActivityResultLauncher<Intent> configLauncher;
 
         // Botón para entrar a configurar
         config = findViewById(R.id.btnconfig);
-        config.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i=new Intent(getApplicationContext(),ConfigActivity.class);
-                configLauncher.launch(i);
-            }
+        config.setOnClickListener(v -> {
+            Intent i=new Intent(this,ConfigActivity.class);
+            configLauncher.launch(i);
         });
-
 
 
     }
