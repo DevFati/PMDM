@@ -157,7 +157,6 @@ public class Tablero {
             for(int j=0;j<y;j++){
                 //Si la casilla no es una mina, le asignamos el valor de las minas que tiene a su alrededor.
                 if(!casillas[i][j].esMina()){
-
                     calcularMinasCerca(i,j);
                 }
             }

@@ -77,11 +77,16 @@ private ActivityResultLauncher<Intent> configLauncher;
                 Toast.makeText(MainActivity.this, "Todos los elementos del mail tienen que estar rellenados", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            //construimos URI manualmente (se ha intentado automaticamente pero no funciona)
+            String u="mailto:"+email+"?subject="+Uri.encode(asunto)+"&body="+Uri.encode(mensaje);
+            Uri ur=Uri.parse(u);
+
+
             // Crear un intent implícito para abrir un mail
             Intent intent = new Intent(Intent.ACTION_SENDTO);
-            intent.setData(Uri.parse("mailto:"+email)); // se usa mailto para que solo nos muestre apps de mensajeria
-            intent.putExtra(Intent.EXTRA_SUBJECT,asunto);
-            intent.putExtra(Intent.EXTRA_TEXT,mensaje);
+            intent.setData(ur); // se usa mailto para que solo nos muestre apps de mensajeria
+
             startActivity(Intent.createChooser(intent,"Enviar email..."));
         });
 
