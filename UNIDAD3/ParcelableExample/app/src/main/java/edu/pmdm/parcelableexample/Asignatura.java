@@ -25,6 +25,14 @@ public double nota;
         dest.writeDouble(nota);
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public double getNota() {
+        return nota;
+    }
+
     @Override
     public int describeContents() {
         return 0;

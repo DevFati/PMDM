@@ -45,10 +45,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //handleImg es el metodo que maneja el envio de imagenes
     private void handleSendImg(Intent intent, ImageView imag)  {
-
-        Uri imagendir=intent.getParcelableExtra(Intent.EXTRA_STREAM);
-
+        //extrae el objeto de tipo parcelable de lo que esta almacenado en el intent
+        Uri imagendir=intent.getParcelableExtra(Intent.EXTRA_STREAM); //EXTRA_STREAM es la clave para acceder a los datos enviados
         if(imagendir!=null){
             imag.setImageURI(imagendir);
         }

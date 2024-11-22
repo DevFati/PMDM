@@ -18,6 +18,8 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
+                <!-- aqui indicamos que nuestra app puede manipular
+                datos del tpo MIME image o jpeg-->
                 <data android:mimeType="image/jpeg" />
             </intent-filter>
         </activity>
