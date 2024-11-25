@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Campo para el título del libro -->
+    <EditText
+        android:id="@+id/titulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Título del libro"
+        android:inputType="text" />
+
+    <!-- Campo para el autor del libro -->
+    <EditText
+        android:id="@+id/autor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Autor"
+        android:inputType="text" />
+
+    <!-- Campo para el año de publicación -->
+    <EditText
+        android:id="@+id/anio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Año de publicación"
+        android:inputType="number" />
+
+    <!-- Campo para la descripción del libro -->
+    <EditText
+        android:id="@+id/descripcion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Descripción"
+        android:inputType="textMultiLine" />
+
+    <!-- Botón para guardar el libro -->
+    <Button
+        android:id="@+id/guardar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Guardar"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>

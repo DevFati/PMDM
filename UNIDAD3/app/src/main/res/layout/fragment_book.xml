@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Título del libro -->
+    <TextView
+        android:id="@+id/detalle_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Título"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Autor del libro -->
+    <TextView
+        android:id="@+id/detalle_autor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Autor"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Año del libro -->
+    <TextView
+        android:id="@+id/detalle_anio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Año"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Descripción del libro -->
+    <TextView
+        android:id="@+id/detalle_descripcion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Descripción"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Botón para volver a la lista -->
+    <Button
+        android:id="@+id/volver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Volver" />
+
+</LinearLayout>
