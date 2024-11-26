@@ -62,7 +62,7 @@ public class Contacto implements Parcelable {
         return 0;
     }
 
-    public static final Creator<Contacto> CREATOR = new Creator<Contacto>() {
+    public static final Creator<Contacto> CREATOR = new Creator<Contacto>() {00
         @Override
         public Contacto createFromParcel(Parcel in) {
             return new Contacto(in);

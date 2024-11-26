@@ -3,6 +3,8 @@ package com.example.prc3_fatimamortahil.bikes;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +19,7 @@ public class BikesContent {
     public static String selectedDate=""; //Store the selected date
     public static void loadBikesFromJSON(Context c) {
         String json = null;
+
         try {
             InputStream is =
                     c.getAssets().open("bikeList.json");
@@ -47,6 +50,7 @@ public class BikesContent {
             }
         } catch (JSONException | IOException e) {
             e.printStackTrace();
+            Toast.makeText(c,"Problemas con el json",Toast.LENGTH_SHORT).show();
         }
     }
     public static class Bike {
