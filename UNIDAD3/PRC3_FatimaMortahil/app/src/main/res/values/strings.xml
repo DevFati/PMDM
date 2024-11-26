@@ -12,9 +12,6 @@
     <string name="previous">Previous</string>
     <string name="buttonNextFragment">Ir a listas bicis</string>
     <string name="buttonSecond">Volver</string>
-    <string name="cityS">Seleccione una ciudad</string>
-
-
-
+    <string name="buttonTema">Cambiar Tema</string>
 
 </resources>

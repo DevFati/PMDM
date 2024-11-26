@@ -36,7 +36,12 @@ private FragmentFirstBinding binding;
 
         //accedemos a las vistas de fragment_first.xml
         binding = FragmentFirstBinding.inflate(inflater, container, false);
+        //Obtenemos la fecha actual en milisegundos
+        long hoy=System.currentTimeMillis();
 
+        //Desabilitamos las fechas anteriores a hoy (ya que no tendría
+        //sentido)
+        binding.calendarView.setMinDate(hoy);
         //Configuramos un lisener que detecta cuando el usuario selecciona una fecha en el calendarView
         binding.calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -74,14 +79,17 @@ private FragmentFirstBinding binding;
     }
 
 
-
+//Este metodo se ejecuta después de que la vista esta lista
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //Configuramos la accion a realizar cuando el usuario le de clic
+        // al boton para ir al siguiente fragmento.
         binding.buttonNextFragment.setOnClickListener(v -> {
-
+        //Si no se ha seleccionado ninguna fecha, mostramos un mensaje al usuario.
             if (BikesContent.selectedDate.isEmpty()) {
                 Toast.makeText(this.getContext(), "Introduce una fecha antes de seguir", Toast.LENGTH_SHORT).show();
             } else {
+                //Si ya se seleccionó una fecha, nos dirigimos al siguiente fragmento
                 NavHostFragment.findNavController(FirstFragment.this)
                         .navigate(R.id.action_FirstFragment_to_SecondFragment);
             }
@@ -90,7 +98,9 @@ private FragmentFirstBinding binding;
 
     @Override
     public void onDestroyView() {
+        //Este metodo se ejecuta cuando el fragmento ya no se usa.
         super.onDestroyView();
+        //Se libera el binding para evitar problemas de memoria.
         binding = null;
     }
 }
