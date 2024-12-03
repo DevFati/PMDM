@@ -1,5 +1,11 @@
 package com.example.prc3_fatimamortahil;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -48,12 +55,50 @@ public class SecondFragment extends Fragment {
         //Llamamos a nuestro metodo spinner, que nos configura un spinner para
         //poder elegir por qué ciudad queremos filtrar las bicicletas.
         spinner();
+        //Configuramos el botón de salir
+        binding.buttonSalir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Enviamos la notificación
+                enviarNotificacion();
+                //Cerramos sesion
+                requireActivity().finish();
+            }
+        });
         //Aqui se devuelve la vista raíz, para que se vea el fragmento por pantalla.
         return binding.getRoot();
 
     }
 
 
+    private void enviarNotificacion() {
+        // Construir la notificación.
+        NotificationCompat.Builder constructorNotif = new NotificationCompat.Builder(requireContext(), "sharemybike_channel")
+                .setSmallIcon(R.drawable.notificacion) // Ícono pequeño.
+                .setContentTitle("ShareMyBike") // Título.
+                .setContentText("Nos vemos pronto, gracias por usar ShareMyBike") // Texto de la notificación que saldra al usuario.
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT) // Prioridad estándar.
+                .setAutoCancel(true); // Se elimina automáticamente al pulsarla.
+
+        // Configuramos  la acción al pulsar la notificación.
+        Intent resultadoIntent = new Intent(); //Se crea un intent vacio para que no me redirija a ninguna otra pantalla de la app.
+        PendingIntent resultadoPendingIntent = PendingIntent.getActivity(
+                requireContext(), 0, resultadoIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        constructorNotif.setContentIntent(resultadoPendingIntent);
+
+        // Crear el canal de notificación si es necesario (API 26+).
+        NotificationManager notificationManager = (NotificationManager) requireContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel canal = new NotificationChannel(
+                    "sharemybike_channel",
+                    "ShareMyBike Notifications",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(canal);
+        }
+
+        // Mostrar la notificación.
+        notificationManager.notify(1, constructorNotif.build());
+    }
 
     private void spinner() {
         //En esta lista guardaremos las ciudades disponibles.

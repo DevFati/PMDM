@@ -13,6 +13,6 @@
     <string name="buttonNextFragment">Ir a listas bicis</string>
     <string name="buttonSecond">Volver</string>
     <string name="buttonTema">Cambiar Tema</string>
-    <string name="buttonSalir">Salir</string>
+    <string name="buttonSalir">Cerrar sesión</string>
 
 </resources>

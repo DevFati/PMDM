@@ -112,7 +112,8 @@ private static boolean permisosSolicitados=false; //Para evitar pedir permisos r
                     return; //No seguimos
                 }
                 //Si todo esta correcto, llevamos al usuario a la pantalla "BikeActivity"
-
+                //Limpiamos el email
+                binding.editTextEmail.setText("");
                 Intent intent=new Intent(MainActivity.this,BikeActivity.class);
                 startActivity(intent);
             }

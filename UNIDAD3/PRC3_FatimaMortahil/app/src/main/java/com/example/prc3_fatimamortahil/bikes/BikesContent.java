@@ -48,9 +48,11 @@ public class BikesContent {
                 ITEMS.add(new BikesContent.Bike(
                         photo,owner,description,city,location,email));
             }
-        } catch (JSONException | IOException e) {
+        } catch (JSONException  e) {
             e.printStackTrace();
-            Toast.makeText(c,"Problemas con el json",Toast.LENGTH_SHORT).show();
+            Toast.makeText(c,"No hay datos en el json",Toast.LENGTH_SHORT).show();
+        }catch ( IOException e){
+            Toast.makeText(c,"No se encuentra el archivo json",Toast.LENGTH_SHORT).show();
         }
     }
     public static class Bike {
