@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean internet() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        if (connectient vityManager != null) {
+        if (connectivityManager != null) {
             NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
             return capabilities != null && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
         }
@@ -111,11 +111,12 @@ public class MainActivity extends AppCompatActivity {
        });
     }
 
+
+
+
     private String leer(String u) throws IOException {
         URL url=new URL(u);
-
         HttpURLConnection c=(HttpURLConnection) url.openConnection();
-
         c.setRequestMethod("GET");
         c.setConnectTimeout(10000);
         c.setReadTimeout(15000);
@@ -129,11 +130,7 @@ public class MainActivity extends AppCompatActivity {
         }
         reader.close();
         return builder.toString();
-
-
     }
-
-
 
 
 
