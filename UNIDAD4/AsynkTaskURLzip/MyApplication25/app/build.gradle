@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace "es.riberadeltajo.myapplication"
-    compileSdk 31
+    compileSdk 34
 
     defaultConfig {
         applicationId "es.riberadeltajo.myapplication"
