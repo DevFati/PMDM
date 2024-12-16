@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "C:\\Users\\fatmo\\.gradle\\daemon\\8.7\\com.example.practicaexecutor_fatimamortahil.app-mergeDebugResources-30:\\layout\\activity_segunda_pantalla.xml",
+        "source": "C:\\Users\\fatmo\\.gradle\\daemon\\8.7\\com.example.practicaexecutor_fatimamortahil.app-main-33:\\layout\\activity_segunda_pantalla.xml"
+    },
+    {
+        "merged": "com.example.practicaexecutor_fatimamortahil.app-mergeDebugResources-30:/layout/activity_main.xml",
+        "source": "com.example.practicaexecutor_fatimamortahil.app-main-33:/layout/activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\fatmo\\.gradle\\daemon\\8.7\\com.example.practicaexecutor_fatimamortahil.app-mergeDebugResources-30:\\layout\\activity_main.xml",
+        "source": "C:\\Users\\fatmo\\.gradle\\daemon\\8.7\\com.example.practicaexecutor_fatimamortahil.app-main-33:\\layout\\activity_main.xml"
+    }
+]

@@ -1,0 +1,26 @@
+R_DEF: Internal format may change without notice
+local
+color black
+color white
+drawable ic_launcher_background
+drawable ic_launcher_foreground
+id btnBack
+id btnDescargar
+id btnDescargarImagen
+id btnReset
+id btnVerFotos
+id container
+id edImagenURL
+id edURL
+id main
+id textViewContador
+id txtDescarga
+layout activity_main
+layout activity_segunda_pantalla
+mipmap ic_launcher
+mipmap ic_launcher_round
+string app_name
+style Base.Theme.PracticaExecutor_FatimaMortahil
+style Theme.PracticaExecutor_FatimaMortahil
+xml backup_rules
+xml data_extraction_rules

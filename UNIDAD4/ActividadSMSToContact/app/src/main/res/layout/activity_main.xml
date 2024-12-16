@@ -8,19 +8,21 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="194dp"
-        android:layout_height="50dp"
+        android:id="@+id/btnSeleccionarC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="Seleccionar Contacto"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.045" />
+        app:layout_constraintVertical_bias="0.045"
+        android:visibility="invisible"/>
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/edtxtNombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -31,10 +33,11 @@
         app:layout_constraintHorizontal_bias="0.079"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.157" />
+        app:layout_constraintVertical_bias="0.157"
+        android:visibility="invisible"/>
 
     <EditText
-        android:id="@+id/editTextText2"
+        android:id="@+id/edtxtApellido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -45,43 +48,92 @@
         app:layout_constraintHorizontal_bias="0.079"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.266" />
+        app:layout_constraintVertical_bias="0.266"
+        android:visibility="gone"/>
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnBuscarNom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="Buscar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.886"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.158" />
+        app:layout_constraintVertical_bias="0.158"
+        android:visibility="invisible"/>
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btnBuscarApe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="Buscar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.889"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.266" />
+        app:layout_constraintVertical_bias="0.266"
+        android:visibility="invisible"/>
 
-    <Button
-        android:id="@+id/button4"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewContactos"
+        android:layout_width="wrap_content"
+        android:layout_height="213dp"
+        app:layout_constraintTop_toBottomOf="@+id/edtxtApellido"
+        app:layout_constraintBottom_toTopOf="@+id/mensaje"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible" />
+
+    <EditText
+        android:id="@+id/mensaje"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:hint="Mensaje"
+
+        tools:layout_editor_absoluteX="27dp"
+        tools:layout_editor_absoluteY="373dp"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewContactos"
+        app:layout_constraintBottom_toTopOf="@+id/contador"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/contador"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="0/160"
+        tools:layout_editor_absoluteX="109dp"
+        tools:layout_editor_absoluteY="276dp"
+        app:layout_constraintTop_toBottomOf="@+id/mensaje"
+        app:layout_constraintBottom_toTopOf="@+id/btnEnviar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible"/>
+
+    <Button
+        android:id="@+id/btnEnviar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="Enviar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.959" />
+        app:layout_constraintVertical_bias="0.959"
+        android:visibility="invisible"/>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
