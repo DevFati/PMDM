@@ -19,7 +19,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.045"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:backgroundTint="#2196F3"
+        android:textColor="#FFFFFF"
+
+        />
 
     <EditText
         android:id="@+id/edtxtNombre"
@@ -63,7 +67,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.158"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:backgroundTint="#2196F3"
+        android:textColor="#FFFFFF"/>
 
     <Button
         android:id="@+id/btnBuscarApe"
@@ -77,34 +83,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.266"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:backgroundTint="#2196F3"
+        android:textColor="#FFFFFF"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewContactos"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="213dp"
         app:layout_constraintTop_toBottomOf="@+id/edtxtApellido"
         app:layout_constraintBottom_toTopOf="@+id/mensaje"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        />
 
     <EditText
         android:id="@+id/mensaje"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:ems="10"
-        android:inputType="text"
         android:hint="Mensaje"
+        android:inputType="textMultiLine"
 
-        tools:layout_editor_absoluteX="27dp"
-        tools:layout_editor_absoluteY="373dp"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerViewContactos"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/contador"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="invisible"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewContactos" />
 
     <TextView
         android:id="@+id/contador"
@@ -131,7 +138,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.959"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:backgroundTint="#2196F3"
+        android:textColor="#FFFFFF"
+        />
 
 
 

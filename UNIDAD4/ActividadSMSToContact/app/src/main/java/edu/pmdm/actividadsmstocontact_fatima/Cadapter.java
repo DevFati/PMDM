@@ -69,7 +69,7 @@ public class Cadapter extends RecyclerView.Adapter<Cadapter.ContactViewHolder> {
         }
     }
 
-    // Interfaz para manejar clics largos
+    // Interfaz para manejar los clics largos
     public interface OnContactLongClickListener {
         void onContactLongClick(Contacto contact);
     }

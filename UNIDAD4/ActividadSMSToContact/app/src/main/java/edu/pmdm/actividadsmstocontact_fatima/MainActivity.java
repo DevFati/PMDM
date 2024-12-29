@@ -1,10 +1,5 @@
 package edu.pmdm.actividadsmstocontact_fatima;
-
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
 import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -15,9 +10,7 @@ import android.provider.ContactsContract;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,11 +26,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import edu.pmdm.actividadsmstocontact_fatima.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,28 +53,30 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+
+        //pedimos los permisos de contactos nada mas crear la app si no estan otorgados
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_CONTACTS}, SOLICITUD_PERMISO_CONTACTOS);
         }
-        //permiso de contactos
+
 
 
         binding.btnEnviar.setEnabled(false);
+        binding.btnSeleccionarC.setVisibility(View.VISIBLE);
 
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            binding.btnSeleccionarC.setVisibility(View.VISIBLE);
-        }else{
-            Toast.makeText(this, "Permisos de contacto denegados", Toast.LENGTH_SHORT).show();
-
-        }
        binding.btnSeleccionarC.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
 
+               if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
                binding.edtxtNombre.setVisibility(View.VISIBLE);
                binding.edtxtApellido.setVisibility(View.VISIBLE);
                binding.btnBuscarNom.setVisibility(View.VISIBLE);
                binding.btnBuscarApe.setVisibility(View.VISIBLE);
+               }else{
+                   Toast.makeText(MainActivity.this, "Permisos de contacto denegados", Toast.LENGTH_SHORT).show();
+
+               }
            }
        });
 
@@ -133,7 +126,15 @@ public class MainActivity extends AppCompatActivity {
         binding.btnEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mostrarDialogoConfirmacion();
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, SOLICITUD_PERMISO_SMS);
+                    Toast.makeText(MainActivity.this, "Permisos de SMS denegados", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    mostrarDialogoConfirmacion();
+                    enviarSms();
+                    binding.mensaje.setText("");
+                }
             }
         });
 
@@ -158,9 +159,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 boolean contieneCaracterEspecial = contieneCaracterEspecial(s.toString());
+                //cuando se pasa de 70 o 160 lo que hago es caparlo y borrar los caracteres sobrantes y salta un mensaje de advertencia
+                //informando de esto al usuario
+                if (contieneCaracterEspecial) {
+                    if (s.length() > 70) {
+                        s.delete(70, s.length());
+                        Toast.makeText(MainActivity.this, "Mensaje limitado a 70 caracteres con Unicode" , Toast.LENGTH_SHORT).show();
 
-                if ((contieneCaracterEspecial && s.length() > 70) || (!contieneCaracterEspecial && s.length() > 160)) {
-                    s.delete(contieneCaracterEspecial ? 70 : 160, s.length());
+                    }
+                } else {
+                    if (s.length() > 160) {
+                        s.delete(160, s.length());
+                        Toast.makeText(MainActivity.this, "Mensaje limitado a 160 caracteres", Toast.LENGTH_SHORT).show();
+
+                    }
                 }
 
                 // Desactivar botón si el mensaje está vacío
@@ -169,7 +181,23 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void enviarSms() {
+        String mensaje = binding.mensaje.getText().toString();
+        String numero = contactoSeleccionado.getNumero();
+
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(numero, null, mensaje, null, null);
+            Toast.makeText(this, "SMS enviado a " + contactoSeleccionado.getNombre(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            //Por si acaso ocurre algun error entra aqui
+            Toast.makeText(this, "Error al enviar el SMS", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
     private boolean contieneCaracterEspecial(String mensaje) {
+        //probamos si se introdujo algun caracter especial
         for (int i = 0; i < mensaje.length(); i++) {
             if (!Character.isLetterOrDigit(mensaje.charAt(i)) && !Character.isSpaceChar(mensaje.charAt(i))) {
                 return true;
@@ -179,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static void mostrarContenedorMensaje(Contacto contact) {
-
+        //habilitamos los diferentes campos y reiniciamos el campo y el contador
         binding.mensaje.setVisibility(View.VISIBLE);
         binding.btnEnviar.setVisibility(View.VISIBLE);
         binding.contador.setVisibility(View.VISIBLE);
@@ -191,42 +219,24 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+//NOTAS: Yo estoy teniendo en cuenta los dos telefonos del contacto porque realmente aunque sean los mismos contactos,
+    //se envian a numeros diferentes cuando se envia el sms al final.
     private void filtrarContactos() {
         listaContactos.clear();
+        //Los espacios no se tendran en cuenta como parte del nombre por si
+        // el usuario los introduce al final sin querer (lo mismo aplica al apellido)
         String nombreFiltro = binding.edtxtNombre.getText().toString().trim();
         String apellidoFiltro = binding.edtxtApellido.getText().toString().trim();
 
-        String nombreQuery = "%";
-        String apellidoQuery = "%";
-
-        if (!nombreFiltro.isEmpty()) {
-            nombreQuery = nombreFiltro.replace("%", "%") + "%";
-        }
-
-        if (!apellidoFiltro.isEmpty()) {
-            apellidoQuery = apellidoFiltro.replace("%", "%") + "%";
-        }
+        // Reemplazar comodines para usarlos en la consulta
+        String nombreQuery = nombreFiltro.replace("*", "%").replace("?", "_");
+        String apellidoQuery = apellidoFiltro.replace("*", "%").replace("?", "_");
 
         ContentResolver contentResolver = getContentResolver();
-        String selection;
-        String[] selectionArgs;
-
-        if (!nombreFiltro.isEmpty() && !apellidoFiltro.isEmpty()) {
-            selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " LIKE ? AND " +
-                    ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " LIKE ?";
-            selectionArgs = new String[]{nombreQuery, apellidoQuery};
-        } else if (!nombreFiltro.isEmpty()) {
-            selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " LIKE ?";
-            selectionArgs = new String[]{nombreQuery};
-        } else if (!apellidoFiltro.isEmpty()) {
-            selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " LIKE ?";
-            selectionArgs = new String[]{apellidoQuery};
-        } else {
-            selection = null;
-            selectionArgs = null;
-        }
-
+        String selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " LIKE ?";
+        String[] selectionArgs ={nombreQuery + "% "+apellidoQuery + "%"};
+       
+        //aqui configuramos el cursos
         Cursor cursor = contentResolver.query(
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                 new String[]{
@@ -240,10 +250,28 @@ public class MainActivity extends AppCompatActivity {
         );
 
         if (cursor != null) {
-            while (cursor.moveToNext()) {
-                String nombre = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                String numero = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                listaContactos.add(new Contacto(nombre, numero));
+            //si el cursor no lanza ningun contacto entonces lo que pasa es que no hubo coincidencias
+            if(cursor.getCount()==0){
+                Toast.makeText(this, "No se encontraron coincidencias", Toast.LENGTH_SHORT).show();
+
+            }else {
+                while (cursor.moveToNext()) {
+                    String nombreCompleto = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    String numero = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                    Bitmap foto = null;
+                    String fotoUri = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Photo.PHOTO_URI));
+                    if (fotoUri != null) {
+                        try {
+                            InputStream inputStream = contentResolver.openInputStream(Uri.parse(fotoUri));
+                            foto = BitmapFactory.decodeStream(inputStream);
+                        } catch (Exception e) {
+                            foto = null;
+                        }
+                    }
+                    //añadimos el contacto a la lista
+                    listaContactos.add(new Contacto(nombreCompleto, foto, numero));
+                }
             }
             cursor.close();
         }
@@ -252,15 +280,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void actualizarLista(List<Contacto> contactosFiltrados) {
-        adapter = new Cadapter(contactosFiltrados, contact -> {
-        });
-        binding.recyclerViewContactos.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-    }
-
 
     private void mostrarDialogoConfirmacion() {
+        //mostramos un dialogo cuando se le da a enviar
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialogo, null);
         builder.setView(dialogView);
@@ -270,34 +292,28 @@ public class MainActivity extends AppCompatActivity {
         TextView tvNumero = dialogView.findViewById(R.id.tvNumero);
         TextView tvMensaje = dialogView.findViewById(R.id.tvMensaje);
 
-        tvNombre.setText(contactoSeleccionado.getNombre());
+        tvNombre.setText("SMS enviado a: "+contactoSeleccionado.getNombre());
         tvNumero.setText(contactoSeleccionado.getNumero());
         tvMensaje.setText(binding.mensaje.getText().toString());
 
         if (contactoSeleccionado.getFoto() != null) {
-            try {
-                InputStream inputStream = getContentResolver().openInputStream(Uri.parse(contactoSeleccionado.getFoto()));
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                ivFoto.setImageBitmap(bitmap);
-            } catch (Exception e) {
-                ivFoto.setImageResource(R.drawable.baseline_account_circle_24); // Imagen por defecto
-            }
+            ivFoto.setImageBitmap(contactoSeleccionado.getFoto());
         } else {
-            ivFoto.setImageResource(R.drawable.baseline_account_circle_24); // Imagen por defecto
+            ivFoto.setImageResource(R.drawable.baseline_account_circle_24); // Imagen predeterminada
         }
 
         // Crear el cuadro de diálogo
         AlertDialog dialog = builder.create();
 
-        // Configurar el botón "Volver"
+        // Configurar el botón para volver a la pag anterior
         Button volver = dialogView.findViewById(R.id.btnVolver);
         volver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss(); // Cierra el cuadro de diálogo
+                dialog.dismiss(); // Cierra el dialogo
             }
         });
-
+        dialog.setCancelable(false);
         dialog.show();
     }
 

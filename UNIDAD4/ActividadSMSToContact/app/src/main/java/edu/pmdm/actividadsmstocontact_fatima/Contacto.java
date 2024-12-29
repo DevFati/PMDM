@@ -1,11 +1,13 @@
 package edu.pmdm.actividadsmstocontact_fatima;
 
+import android.graphics.Bitmap;
+
 public class Contacto {
     private String nombre;
     private String numero;
-    private String foto;
+    private Bitmap foto;
 
-    public Contacto(String nombre, String foto, String numero) {
+    public Contacto(String nombre, Bitmap foto, String numero) {
         this.nombre = nombre;
         this.foto = foto;
         this.numero = numero;
@@ -27,7 +29,7 @@ public class Contacto {
         this.numero = numero;
     }
 
-    public String getFoto() {
+    public Bitmap getFoto() {
         return foto;
     }
 
