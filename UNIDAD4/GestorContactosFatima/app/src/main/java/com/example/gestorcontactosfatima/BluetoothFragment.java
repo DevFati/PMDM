@@ -101,24 +101,32 @@ public class BluetoothFragment extends Fragment {
 
         // Configurar el RecyclerView
         binding.devicesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        // Manejo del clic en un dispositivo simulado
         deviceAdapter = new BluetoothDeviceAdapter(devicesList, device -> {
-            String selectedDevice = device.split("\n")[0];
-            // Crear un Bundle para pasar los datos de un fragmento a otro
-            Bundle bundle = new Bundle();
-            bundle.putString("selectedDevice", selectedDevice);
+            String selectedDevice = device.split("\n")[0]; // Obtiene el nombre del dispositivo seleccionado
 
-            // Crear el ContactListFragment
-            ContactListFragment contactListFragment = new ContactListFragment();
-            contactListFragment.setArguments(bundle);
+            // Verificar si los permisos necesarios están concedidos
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+                // Crear un Bundle para pasar los datos al ContactListFragment
+                Bundle bundle = new Bundle();
+                bundle.putString("selectedDevice", selectedDevice);
 
-            // Reemplazar el fragmento actual por ContactListFragment
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, contactListFragment)
-                    .addToBackStack(null)
-                    .commit();
+                // Crear una instancia del ContactListFragment y pasar los datos
+                ContactListFragment contactListFragment = new ContactListFragment();
+                contactListFragment.setArguments(bundle);
 
+                // Reemplazar el fragmento actual por ContactListFragment
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, contactListFragment)
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                // Mostrar un mensaje si los permisos no están concedidos
+                Toast.makeText(requireContext(), "Permiso de contactos no concedido. No se puede abrir la lista.", Toast.LENGTH_SHORT).show();
+            }
         });
+
         binding.devicesRecyclerView.setAdapter(deviceAdapter);
 
         if (bluetoothAdapter == null) {

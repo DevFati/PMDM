@@ -3,9 +3,11 @@ package com.example.gestorcontactosfatima;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.ContactsContract;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.Manifest;
 
 import com.example.gestorcontactosfatima.databinding.FragmentAddContactBinding;
 
@@ -69,14 +72,24 @@ public class AddContactFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentAddContactBinding.inflate(inflater, container, false);
 
+        // Verificar permisos al iniciar porque sino peta el programa al querer añadir un contacto
+        //sin permisos concedidos anteriormente
+
+        verificarPermisos();
+
         // boton de guardar contacto
         binding.buttonGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!verificarPermisos()) {
+                    Toast.makeText(requireContext(), "Permisos no concedidos", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String nombre=binding.editTextNom.getText().toString();
                 String numero=binding.editTextP.getText().toString();
 
-                //validamos todos los campos
+                //validamos todos los campos y no dejaremos que se introduzcan un nombre sin apellido o algun campo vacio
+                //o un numero que no siga un formato especifico
 
                 if (nombre.isEmpty() || numero.isEmpty()) {
                     Toast.makeText(requireContext(), "Por favor, completa ambos campos", Toast.LENGTH_SHORT).show();
@@ -97,6 +110,17 @@ public class AddContactFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    private boolean verificarPermisos() {
+        boolean permisosConcedidos = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
+
+       //Si los permisos estan concedidos el boton se habilita, si no estan concedidos el boton se desabilita para evitar que el
+        //programa se rompa
+        binding.buttonGuardar.setEnabled(permisosConcedidos);
+
+        return permisosConcedidos;
     }
 
     private void agregarContacto(String nombre, String numero) {

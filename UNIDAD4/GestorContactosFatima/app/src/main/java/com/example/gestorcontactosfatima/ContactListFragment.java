@@ -141,9 +141,6 @@ public class ContactListFragment extends Fragment {
 
 
 
-
-
-
     // Método para mostrar el cuadro de diálogo para editar un contacto
     private void mostrarDialogoEdicion(Contact contacto, int position) {
         // Crear un View para el diálogo
@@ -167,7 +164,7 @@ public class ContactListFragment extends Fragment {
                     String nuevoN = editN.getText().toString();
                     String nuevoT = editP.getText().toString();
 
-                    // Validar
+                    // Validamos que los dos campos esten rellenos y que el telefono siga un formato
 
                     if (nuevoN.isEmpty() || nuevoT.isEmpty()) {
                         Toast.makeText(requireContext(), "Por favor, completa ambos campos", Toast.LENGTH_SHORT).show();
@@ -252,8 +249,6 @@ public class ContactListFragment extends Fragment {
             Toast.makeText(requireContext(), "No se encontró el contacto", Toast.LENGTH_SHORT).show();
         }
     }
-
-
 
 
 

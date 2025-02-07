@@ -49,7 +49,7 @@ public class  BluetoothDeviceAdapter extends RecyclerView.Adapter<BluetoothDevic
         return devicesList.size();
     }
 
-    // ViewHolder para manejar la vista de cada dispositivo
+    // ViewHolder para trabajar con la vista de cada dispositivo
     static class DeviceViewHolder extends RecyclerView.ViewHolder {
         TextView deviceNameTextView;
         TextView deviceAddressTextView;

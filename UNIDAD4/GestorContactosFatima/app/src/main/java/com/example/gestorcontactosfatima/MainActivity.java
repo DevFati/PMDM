@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == 101) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permiso otorgado, abrir lista de dispositivos
+                // Permiso dado, abrimos lista de dispositivos
                 abrirListaDispositivos();
             } else {
                 // Permiso denegado
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void solicitarPermisosC() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
-            // Mostrar explicación al usuario antes de solicitar el permiso
+
             Toast.makeText(this, "Se necesita acceso a los contactos para mostrar la lista.", Toast.LENGTH_SHORT).show();
         }
 
