@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.FatimaMortahilPreferencias" parent="Theme.Material3.Light">
+        <!-- Colores principales -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorAccent">@color/purple_200</item>
+        <item name="android:windowBackground">@color/windowBackgroundLight</item>
+
+        <!-- Habilitar el Action Bar -->
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
+    </style>
+
+    <!-- Tema heredado -->
+    <style name="Theme.FatimaMortahilPreferencias" parent="Base.Theme.FatimaMortahilPreferencias" />
+</resources>
+
+
+
+

@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">FatimaMortahilPreferencias</string>
+    <string name="hello_blank_fragment">Hello blank</string>
+    <string-array name="TipoEmpleado">
+        <item>Profesor</item>
+        <item>Ordenanza</item>
+        <item>Limpieza</item>
+        <item>Otro</item>
+    </string-array>
+
+
+    <string-array name="phone_formats">
+        <item>+34 (España)</item>
+        <item>+61 (Australia)</item>
+        <item>+64 (Nueva Zelanda)</item>
+        <item>+27 (Sudáfrica)</item>
+        <item>+82 (Corea del Sur)</item>
+        <item>+47 (Noruega)</item>
+        <item>+46 (Suecia)</item>
+        <item>+45 (Dinamarca)</item>
+        <item>+56 (Chile)</item>
+        <item>+57 (Colombia)</item>
+        <item>+54 (Argentina)</item>
+    </string-array>
+
+
+</resources>

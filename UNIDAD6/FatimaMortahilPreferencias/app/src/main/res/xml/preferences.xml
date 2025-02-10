@@ -1,0 +1,22 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <SwitchPreferenceCompat
+        android:key="dark_mode"
+        android:title="Modo oscuro"
+        android:defaultValue="false" />
+
+
+    <ListPreference
+        android:key="phone_format"
+        android:title="Formato del teléfono"
+        android:defaultValue="+34 (España)"
+        android:entries="@array/phone_formats"
+        android:entryValues="@array/phone_formats" />
+
+    <SwitchPreferenceCompat
+        android:key="notifications"
+        android:title="Notificaciones activadas"
+        android:defaultValue="false" />
+</PreferenceScreen>
