@@ -1,6 +1,7 @@
 package com.example.fatimamortahilpreferencias;
 
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,15 +14,16 @@ public class NotificationDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notification_details);
 
         TextView txtDetalles = findViewById(R.id.txtDetalles);
+        Button btnCerrar = findViewById(R.id.btnCerrar);
 
-        // Obtener datos desde el intent
+        // Obtenemos los datos desde el intent
         String nombre = getIntent().getStringExtra("nombre");
         String empresa = getIntent().getStringExtra("empresa");
         String email = getIntent().getStringExtra("email");
         int edad = getIntent().getIntExtra("edad", 0);
         float sueldo = getIntent().getFloatExtra("sueldo", 0.0f);
 
-        // Mostrar los datos en un párrafo
+        // Mostramos los datos en un párrafo
         String detalles = "Datos del Usuario:\n\n" +
                 "Nombre: " + nombre + "\n" +
                 "Empresa: " + empresa + "\n" +
@@ -29,5 +31,12 @@ public class NotificationDetailsActivity extends AppCompatActivity {
                 "Edad: " + edad + "\n" +
                 "Sueldo: " + sueldo;
         txtDetalles.setText(detalles);
+
+
+
+        btnCerrar.setOnClickListener(v -> finish());
+
+
+
     }
 }

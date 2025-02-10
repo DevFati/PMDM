@@ -28,9 +28,10 @@ import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
+    //Identificador del canal de las notificaciones
     public static final String CHANNEL_ID = "USER_DATA_CHANNEL";
 
-
+    //Variables para los campos de texto donde el usuario escriba los datos
     EditText edNombre;
     EditText edEmail;
     EditText edEmpresa;
@@ -40,8 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Crea el canal de notificaciones
         createNotificationChannel(this);
-        // Aplicar el modo oscuro antes de configurar el layout
+        // antes de que se muestre la pantalla, aplicamos el modo oscuro si es que el usuariio lo activo
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean isDarkMode = prefs.getBoolean("dark_mode", false);
         AppCompatDelegate.setDefaultNightMode(isDarkMode ?
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         edEdad = findViewById(R.id.edEdad);
         edSueldo = findViewById(R.id.edSueldo);
 
-
+        //Obtengo las preferencias del dato de usuario guardada
         misPreferencias = getSharedPreferences("Basic Data", MODE_PRIVATE);
 
         String nombre = misPreferencias.getString("nombre", "");
@@ -73,38 +75,53 @@ public class MainActivity extends AppCompatActivity {
         edSueldo.setText(String.valueOf(sueldo));
         edEdad.setText(String.valueOf(edad));
 
+        //Cuando el usuario haga clic en "Guardar"
         Button btnGuardar = findViewById(R.id.btnGuardar);
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
             @Override
             public void onClick(View v) {
+                //Guardamos los datos en las preferencias
                 SharedPreferences.Editor editor = misPreferencias.edit();
-
+                //Obtenemos lo que el usuario ha escrito
                 String nombre = edNombre.getText().toString();
                 String empresa = edEmpresa.getText().toString();
                 String email = edEmail.getText().toString();
                 String edadStr = edEdad.getText().toString();
                 String sueldoStr = edSueldo.getText().toString();
 
+                // Validamos que los campos no estén vacíos
+                if (nombre.isEmpty() || email.isEmpty() || empresa.isEmpty() || edadStr.isEmpty() || sueldoStr.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Todos los campos son obligatorios.", Toast.LENGTH_SHORT).show();
+                    return ;
+                }
+
+                // Validamos que el nombre solo contenga letras
+                if (!nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$")) {
+                    Toast.makeText(MainActivity.this, "El nombre solo puede contener letras.", Toast.LENGTH_SHORT).show();
+                    return ;
+                }
+
                 try {
-                    // Validar edad
+                    // Validamos edad
                     int edad = Integer.parseInt(edadStr);
                     if (edad < 1 || edad > 100) {
                         Toast.makeText(MainActivity.this, "La edad debe estar entre 1 y 100.", Toast.LENGTH_SHORT).show();
                         return; // Salir sin guardar
                     }
 
-                    // Validar email
+                    // Validamos email
                     if (!esEmailValido(email)) {
                         Toast.makeText(MainActivity.this, "El email no es válido.", Toast.LENGTH_SHORT).show();
                         return; // Salir sin guardar
                     }
 
-                    // Validar sueldo
+                    // Validamos el sueldo
                     if (sueldoStr.isEmpty() || !sueldoStr.matches("\\d+\\.?\\d*")) {
                         Toast.makeText(MainActivity.this, "El sueldo debe ser un número decimal válido.", Toast.LENGTH_SHORT).show();
                         return;
                     }
+
 
                     // Guardar datos válidos
                     editor.putString("nombre", nombre);
@@ -119,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Datos guardados correctamente.", Toast.LENGTH_SHORT).show();
                         actualizarBienvenida(); // Actualizar el texto de bienvenida
 
-                        //NOTIFICACION
+                        //si las notificaciones estan activas, mostramos una notificacion
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                         if (prefs.getBoolean("notifications", false) &&
                                 PermissionsManager.comprobarPermisosNotificaciones(MainActivity.this)) {
@@ -162,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+    //Boton para ir a la siguiente pantalla
         Button btnSiguiente = findViewById(R.id.btnSiguiente);
         btnSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,12 +215,13 @@ public class MainActivity extends AppCompatActivity {
         txtBienvenida.setText("Bienvenido, " + nombre);
     }
 
-
+//validamos mail
     private boolean esEmailValido(String email) {
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
         return email != null && email.matches(emailPattern);
     }
 
+    // Método para actualizar la interfaz al volver a esta pantalla
 
     @Override
     protected void onResume() {
@@ -225,12 +243,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    // Método para mostrar el menú de configuración
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.settings_menu, menu);
         return true;
     }
+
+    // Método para manejar clics en el menú
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
