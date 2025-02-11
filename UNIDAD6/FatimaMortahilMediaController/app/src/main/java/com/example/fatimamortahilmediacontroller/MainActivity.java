@@ -40,16 +40,16 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     private TextView txtTiempo, txtTiempoRestante;
     private Button botonDetener, botonSeleccionar, botonSiguiente, botonAnterior, botonStop, botonVerLista;
     private SharedPreferences preferencias;
-    private ArrayList<Uri> listaUrisCanciones;
+    private ArrayList<Uri> listaUrisCanciones; //lista de las uris de las canciones que tenemos
     private ArrayList<String> listaNombresCanciones;
-    private int indiceCancionActual = 0;
+    private int indiceCancionActual = 0; //para saber que cancion estamos reproduciendo
     private static final int SOLICITUD_SELECCION_AUDIO = 1;
-    public static int ultimaPosicion;
-    public static MediaController mc;
-    public static MediaPlayer mp;
+    public static int ultimaPosicion; //para recordar donde quedo la cancion si pausamos
+    public static MediaController mc; //el control de reproduccion
+    public static MediaPlayer mp; //el reproductor de musica
     private Handler h;
     private static final String ID_CANAL = "CanalReproductorMusica";
-    private NotificationManager gestor;
+    private NotificationManager gestor; //para manejar las notificaciones
     private static final int ID_NOTIFICACION = 1;
 
 
@@ -109,6 +109,9 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
 
 
 
+    //Este metodo lo que hace es mostrar una ventana con la lista de canciones
+    //si la lista estuviese vacia muestra un mensaje
+
 
     private void mostrarListaCanciones() {
         if (listaNombresCanciones.isEmpty()) {
@@ -118,10 +121,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         String[] nombresCanciones = listaNombresCanciones.toArray(new String[0]);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Lista de Reproducción")
-                .setItems(nombresCanciones, (dialog, which) -> {
-                    indiceCancionActual = which;
-                    reproducirCancionActual();
-                })
+                .setItems(nombresCanciones, null)
                 .setNegativeButton("Cerrar", (dialog, which) -> dialog.dismiss())
                 .show();
     }
@@ -208,8 +208,11 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
             if(mp.isPlaying()){
                 mp.stop();
 
+
             }
-            mp.release();
+            mp.reset();
+          //  mp.release();
+            System.out.println(indiceCancionActual);
             mp.setDataSource(this, listaUrisCanciones.get(indiceCancionActual));
             mp.prepare();
 
