@@ -43,6 +43,18 @@
         android:padding="10dp"
         android:layout_marginTop="10dp" />
 
+    <Button
+        android:id="@+id/btnStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/btnDetener"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="10dp"
+        android:layout_marginTop="10dp" />
+
     <TextView
         android:id="@+id/txtTiempo"
         android:layout_width="wrap_content"
@@ -51,16 +63,28 @@
         android:textSize="18sp"
         android:textColor="@color/black"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/btnDetener"
+        app:layout_constraintTop_toBottomOf="@id/btnStop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:paddingTop="16dp" />
+
+    <TextView
+        android:id="@+id/txtTiempoRestante"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tiempo restante: 00:00"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/txtTiempo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingTop="10dp" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/txtTiempo"
+        app:layout_constraintTop_toBottomOf="@id/txtTiempoRestante"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:paddingTop="16dp">
@@ -80,4 +104,18 @@
             android:text="Siguiente"
             android:textColor="@color/white" />
     </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <Button
+        android:id="@+id/btnVerLista"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ver Lista de Reproducción"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/btnSiguiente"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        tools:ignore="NotSibling" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

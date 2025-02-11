@@ -14,11 +14,14 @@ public class ControlMusicaReceiver extends BroadcastReceiver {
             if (accion.equals("PAUSAR")) {
                 if (MainActivity.mp != null && MainActivity.mp.isPlaying()) {
                     MainActivity.mp.pause();
+                    MainActivity.ultimaPosicion = MainActivity.mp.getCurrentPosition(); // Guarda la posición
+
                 }
-            } else if (accion.equals("DETENER")) {
+            } else if (accion.equals("REANUDAR")) {
                 if (MainActivity.mp != null && MainActivity.mp.isPlaying()) {
-                    MainActivity.mp.stop();
-                    MainActivity.mp.reset();
+                    MainActivity.mp.seekTo(MainActivity.mp.getCurrentPosition()); // Mantiene la posición
+                    MainActivity.mp.start();
+
                 }
             }
         }
