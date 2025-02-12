@@ -42,6 +42,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.UUID;
+
 
 public class MainActivity extends AppCompatActivity {
     private static final int SOLICITUD_PERMISO_CAMARA = 100;
@@ -49,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int SOLICITUD_CAPTURA_IMAGEN = 1;
     private static final int SOLICITUD_GRABAR_VIDEO = 2;
+    private static final int SOLICITUD_RECORTAR_IMAGEN = 3;
+
     private ImageView imagenVista;
     private Bitmap imagenOriginal;
     private Bitmap imagenEditada;
@@ -58,9 +62,11 @@ public class MainActivity extends AppCompatActivity {
     private Uri videoUri;
     private boolean escalaGrisesActivada = false;
     private boolean invertirColoresActivado = false;
+    private boolean recorteActivado = false;
     private int brilloValor = 0;
     private boolean rotacionActivada = false;
     private float anguloRotacion = 0;
+    private Uri imagenUri;
 
 
     @Override
@@ -85,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
         Button botonGuardarImagen = findViewById(R.id.botonGuardarImagen);
         Button botonGrabarVideo = findViewById(R.id.botonGrabarVideo);
         Button botonReproducirVideo = findViewById(R.id.botonReproducirVideo);
-        
+        Button botonRecortarImagen = findViewById(R.id.botonRecortarImagen);
+
 
         botonCapturarImagen.setOnClickListener(v -> solicitarPermisoCapturaImagen());
         botonEscalaGrises.setOnClickListener(v -> {
@@ -103,12 +110,16 @@ public class MainActivity extends AppCompatActivity {
         botonGuardarImagen.setOnClickListener(v -> guardarImagen());
         botonGrabarVideo.setOnClickListener(v -> solicitarPermisoGrabacionVideo());
         botonReproducirVideo.setOnClickListener(v -> mostrarDialogoVelocidadVideo());
+        botonRecortarImagen.setOnClickListener(v -> {
+            recorteActivado = !recorteActivado;
+            aplicarFiltros();
+        });
 
         barraBrillo.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progreso, boolean delUsuario) {
 
-                brilloValor=progreso-100;
+                brilloValor = progreso - 100;
                 aplicarFiltros();
             }
 
@@ -208,9 +219,10 @@ public class MainActivity extends AppCompatActivity {
             if (imagenOriginal != null) {
                 imagenVista.setImageBitmap(imagenOriginal);
             }
+
+
         }
     }
-
 
 
     private void guardarImagen() {
@@ -285,14 +297,27 @@ public class MainActivity extends AppCompatActivity {
             imagenProcesada = Bitmap.createBitmap(imagenProcesada, 0, 0, imagenProcesada.getWidth(), imagenProcesada.getHeight(), matrix, true);
         }
 
-        imagenEditada = imagenProcesada;
+        if (recorteActivado) {
+            int nuevoAncho = imagenOriginal.getWidth() / 2;
+            int nuevoAlto = imagenOriginal.getHeight() / 2;
+
+            if (nuevoAncho < 50 || nuevoAlto < 50) {
+                Toast.makeText(this, "La imagen ya es demasiado pequeña para recortar", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Recortar la imagen a la mitad
+            imagenOriginal = Bitmap.createBitmap(imagenOriginal, 0, 0, nuevoAncho, nuevoAlto);
+        }
+
+        imagenEditada = imagenOriginal;
         imagenVista.setImageBitmap(imagenEditada);
     }
 
 
-
     private void actualizarGaleria(Context context, Uri uri) {
-        MediaScannerConnection.scanFile(context, new String[]{uri.getPath()}, null, (path, scannedUri) -> {});
+        MediaScannerConnection.scanFile(context, new String[]{uri.getPath()}, null, (path, scannedUri) -> {
+        });
     }
 
     @Override

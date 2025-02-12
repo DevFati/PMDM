@@ -40,4 +40,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    //noinspection UseTomlInstead
+    implementation ("com.github.yalantis:ucrop:2.2.8")
+
+
 }
