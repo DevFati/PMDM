@@ -18,9 +18,11 @@ public class ControlMusicaReceiver extends BroadcastReceiver {
 
                 }
             } else if (accion.equals("REANUDAR")) { //omprueba si la accion recibida es "REANUDAR"
-                if (MainActivity.mp != null && MainActivity.mp.isPlaying()) {  //verifica si el mediaplayer no es nulo y esta reproduciendo
-                    MainActivity.mp.seekTo(MainActivity.mp.getCurrentPosition()); // Mantiene la posición
+                if (MainActivity.mp != null && !MainActivity.mp.isPlaying()) {  //verifica si el mediaplayer no es nulo
+                    MainActivity.mp.seekTo(MainActivity.ultimaPosicion); // Mantiene la posición
                     MainActivity.mp.start(); //reanuda la reproduccion de la musica
+                    MainActivity.actualizarTiempo();
+
 
                 }
             }

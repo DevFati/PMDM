@@ -37,7 +37,7 @@ import java.util.Set;
 import android.Manifest;
 
 public class MainActivity extends AppCompatActivity implements MediaController.MediaPlayerControl {
-    private TextView txtTiempo, txtTiempoRestante;
+    public static TextView txtTiempo, txtTiempoRestante;
     private Button botonDetener, botonSeleccionar, botonSiguiente, botonAnterior, botonStop, botonVerLista;
     private SharedPreferences preferencias;
     private ArrayList<Uri> listaUrisCanciones; //lista de las uris de las canciones que tenemos
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     public static int ultimaPosicion; //para recordar donde quedo la cancion si pausamos
     public static MediaController mc; //el control de reproduccion
     public static MediaPlayer mp; //el reproductor de musica
-    private Handler h;
+    public static Handler h;
     private static final String ID_CANAL = "CanalReproductorMusica";
     private NotificationManager gestor; //para manejar las notificaciones
     private static final int ID_NOTIFICACION = 1;
@@ -118,13 +118,19 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
             Toast.makeText(this, "No hay canciones en la lista", Toast.LENGTH_SHORT).show();
             return;
         }
+
         String[] nombresCanciones = listaNombresCanciones.toArray(new String[0]);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Lista de Reproducción")
-                .setItems(nombresCanciones, null)
+                .setItems(nombresCanciones, (dialog, which) -> {
+                    indiceCancionActual = which;
+                    reproducirCancionActual();
+                })
                 .setNegativeButton("Cerrar", (dialog, which) -> dialog.dismiss())
                 .show();
     }
+
 
 
 
@@ -145,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
-            mc.show(0); // Ahora MediaController solo se muestra cuando la ventana está lista
+            mc.show(2000); //
         }
     }
 
@@ -174,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         NotificationCompat.Builder constructor = new NotificationCompat.Builder(this, ID_CANAL)
                 .setSmallIcon(R.drawable.music_player)
                 .setContentTitle("Reproductor de Música")
-                .setContentText("Reproduciendo: " + listaUrisCanciones.get(indiceCancionActual))
+                .setContentText("Reproduciendo: " + listaNombresCanciones.get(indiceCancionActual))
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .addAction(R.drawable.pause, "Pausar", pausaIntent)
                 .addAction(R.drawable.stop, "Reanudar", reanudarIntent);
@@ -301,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     }
 
 
-    private void actualizarTiempo() {
+    public static void actualizarTiempo() {
         if (h == null) return;
 
         h.postDelayed(new Runnable() {
@@ -420,6 +426,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     @Override
     protected void onResume() {
         super.onResume();
+
         if(!mp.isPlaying()){
             ultimaPosicion=preferencias.getInt("UltimaPosicion",0);
             mp.seekTo(ultimaPosicion);

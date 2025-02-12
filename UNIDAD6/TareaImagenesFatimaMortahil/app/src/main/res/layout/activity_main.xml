@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/main"
+    android:padding="16dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/imagenVista"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:scaleType="centerCrop"
+                android:background="#CCCCCC" />
+
+            <SeekBar
+                android:id="@+id/barraBrillo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="200"
+                android:progress="100"
+                android:layout_marginTop="8dp"/>
+
+            <Button
+                android:id="@+id/botonCapturarImagen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Capturar Imagen"
+                android:layout_marginTop="8dp"/>
+
+            <Button
+                android:id="@+id/botonEscalaGrises"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Escala de Grises"
+                android:layout_marginTop="8dp"/>
+
+            <Button
+                android:id="@+id/botonInvertirColores"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Invertir Colores"
+                android:layout_marginTop="8dp"/>
+
+            <Button
+                android:id="@+id/botonRotarImagen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rotar Imagen"
+                android:layout_marginTop="8dp"/>
+
+            <Button
+                android:id="@+id/botonGuardarImagen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Guardar Imagen"
+                android:layout_marginTop="8dp"/>
+
+            <VideoView
+                android:id="@+id/videoVista"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="12dp"
+                android:background="@android:color/black"/>
+
+            <Button
+                android:id="@+id/botonGrabarVideo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Grabar Video"
+                android:layout_marginTop="8dp"/>
+
+            <Button
+                android:id="@+id/botonReproducirVideo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Reproducir Video"
+                android:layout_marginTop="8dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
