@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean rotacionActivada = false;
     private float anguloRotacion = 0;
     private Uri imagenUri;
+    private float velocidadSeleccionada = 1.0f;
 
 
     @Override
@@ -83,6 +84,13 @@ public class MainActivity extends AppCompatActivity {
         imagenVista = findViewById(R.id.imagenVista);
         barraBrillo = findViewById(R.id.barraBrillo);
         videoVista = findViewById(R.id.videoVista);
+        videoVista.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                reproductor=mp;
+                reproductor.setLooping(true);
+            }
+        });
 
         Button botonCapturarImagen = findViewById(R.id.botonCapturarImagen);
         Button botonEscalaGrises = findViewById(R.id.botonEscalaGrises);
@@ -90,7 +98,25 @@ public class MainActivity extends AppCompatActivity {
         Button botonRotarImagen = findViewById(R.id.botonRotarImagen);
         Button botonGuardarImagen = findViewById(R.id.botonGuardarImagen);
         Button botonGrabarVideo = findViewById(R.id.botonGrabarVideo);
-        Button botonReproducirVideo = findViewById(R.id.botonReproducirVideo);
+        Button botonReproducirLento = findViewById(R.id.botonReproducirLento);
+        Button botonReproducirNormal = findViewById(R.id.botonReproducirNormal);
+        Button botonReproducirRapido = findViewById(R.id.botonReproducirRapido);
+
+        // Botones de video
+        botonReproducirLento.setOnClickListener(v -> {
+            velocidadSeleccionada = 0.5f;
+            reproducirVideo();
+        });
+
+        botonReproducirNormal.setOnClickListener(v -> {
+            velocidadSeleccionada = 1.0f;
+            reproducirVideo();
+        });
+
+        botonReproducirRapido.setOnClickListener(v -> {
+            velocidadSeleccionada = 2.0f;
+            reproducirVideo();
+        });
         Button botonRecortarImagen = findViewById(R.id.botonRecortarImagen);
 
 
@@ -109,11 +135,12 @@ public class MainActivity extends AppCompatActivity {
         });
         botonGuardarImagen.setOnClickListener(v -> guardarImagen());
         botonGrabarVideo.setOnClickListener(v -> solicitarPermisoGrabacionVideo());
-        botonReproducirVideo.setOnClickListener(v -> mostrarDialogoVelocidadVideo());
         botonRecortarImagen.setOnClickListener(v -> {
             recorteActivado = !recorteActivado;
             aplicarFiltros();
         });
+
+
 
         barraBrillo.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -134,35 +161,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void mostrarDialogoVelocidadVideo() {
+
+    private void reproducirVideo() {
         if (videoUri == null) {
             Toast.makeText(this, "No hay un video para reproducir", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String[] opciones = {"0.5x", "1x", "2x"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Selecciona la velocidad de reproducción");
-        builder.setItems(opciones, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                float velocidad = 1.0f;
-                if (which == 0) velocidad = 0.5f;
-                else if (which == 1) velocidad = 1.0f;
-                else if (which == 2) velocidad = 2.0f;
-                reproducirVideo(velocidad);
-            }
-        });
-        builder.show();
-    }
-
-    private void reproducirVideo(float velocidad) {
+        videoVista.stopPlayback();
         videoVista.setVideoURI(videoUri);
+        videoVista.requestFocus();
+
         videoVista.setOnPreparedListener(mp -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                mp.setPlaybackParams(mp.getPlaybackParams().setSpeed(velocidad));
+                mp.setPlaybackParams(mp.getPlaybackParams().setSpeed(velocidadSeleccionada));
             }
             mp.start();
+        });
+
+        videoVista.setOnErrorListener((mp, what, extra) -> {
+            Toast.makeText(this, "Error al reproducir el video", Toast.LENGTH_SHORT).show();
+            return true;
         });
     }
 
@@ -190,11 +209,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @SuppressLint("QueryPermissionsNeeded")
     private void abrirGrabacionVideo() {
         Intent intentVideo = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        intentVideo.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-        intentVideo.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 30);
         if (intentVideo.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(intentVideo, SOLICITUD_GRABAR_VIDEO);
         } else {
@@ -207,22 +223,35 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == SOLICITUD_GRABAR_VIDEO && resultCode == RESULT_OK && data != null) {
+        if (resultCode != RESULT_OK || data == null) {
+            Toast.makeText(this, "No se recibió un resultado válido", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (requestCode == SOLICITUD_GRABAR_VIDEO) {
             videoUri = data.getData();
             if (videoUri != null) {
-                videoVista.setVideoURI(videoUri);
-                videoVista.start();
+                actualizarGaleria2(this, videoUri);
+                // 🔹 Ahora se usa la velocidad seleccionada en lugar de 1.0f
+                reproducirVideo();
+            } else {
+                Toast.makeText(this, "Error: No se pudo obtener el video", Toast.LENGTH_SHORT).show();
             }
-        } else if (requestCode == SOLICITUD_CAPTURA_IMAGEN && resultCode == RESULT_OK && data != null) {
+        } else if (requestCode == SOLICITUD_CAPTURA_IMAGEN) {
             Bundle extras = data.getExtras();
             imagenOriginal = (Bitmap) extras.get("data");
             if (imagenOriginal != null) {
                 imagenVista.setImageBitmap(imagenOriginal);
             }
-
-
         }
     }
+
+    private void actualizarGaleria2(Context context, Uri uri) {
+        MediaScannerConnection.scanFile(context, new String[]{uri.getPath()}, null, (path, scannedUri) -> {
+            runOnUiThread(() -> Toast.makeText(context, "Video guardado y escaneado", Toast.LENGTH_SHORT).show());
+        });
+    }
+
 
 
     private void guardarImagen() {
@@ -253,23 +282,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void aplicarFiltros() {
-
-
         if (imagenOriginal == null) {
             Toast.makeText(this, "Debes capturar una imagen primero", Toast.LENGTH_SHORT).show();
-
             return;
         }
 
-        Bitmap imagenProcesada = Bitmap.createBitmap(imagenOriginal.getWidth(), imagenOriginal.getHeight(), imagenOriginal.getConfig());
+        // Crear una copia de la imagen original para aplicar filtros sin modificar la original directamente
+        Bitmap imagenProcesada = imagenOriginal.copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(imagenProcesada);
         Paint paint = new Paint();
         ColorMatrix colorMatrix = new ColorMatrix();
 
+        // Aplicar escala de grises
         if (escalaGrisesActivada) {
             colorMatrix.setSaturation(0);
         }
 
+        // Aplicar inversión de colores
         if (invertirColoresActivado) {
             colorMatrix.set(new float[]{
                     -1, 0, 0, 0, 255,
@@ -279,40 +308,47 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+        // Aplicar brillo
         if (brilloValor != 0) {
-            colorMatrix.postConcat(new ColorMatrix(new float[]{
+            ColorMatrix ajusteBrillo = new ColorMatrix(new float[]{
                     1, 0, 0, 0, brilloValor,
                     0, 1, 0, 0, brilloValor,
                     0, 0, 1, 0, brilloValor,
                     0, 0, 0, 1, 0
-            }));
+            });
+            colorMatrix.postConcat(ajusteBrillo);
         }
 
         paint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
         canvas.drawBitmap(imagenOriginal, 0, 0, paint);
 
+        // Aplicar rotación
         if (anguloRotacion % 360 != 0) {
             Matrix matrix = new Matrix();
             matrix.postRotate(anguloRotacion);
             imagenProcesada = Bitmap.createBitmap(imagenProcesada, 0, 0, imagenProcesada.getWidth(), imagenProcesada.getHeight(), matrix, true);
         }
 
+        // Aplicar recorte si está activado
         if (recorteActivado) {
-            int nuevoAncho = imagenOriginal.getWidth() / 2;
-            int nuevoAlto = imagenOriginal.getHeight() / 2;
+            int nuevoAncho = imagenProcesada.getWidth() / 2;
+            int nuevoAlto = imagenProcesada.getHeight() / 2;
 
-            if (nuevoAncho < 50 || nuevoAlto < 50) {
-                Toast.makeText(this, "La imagen ya es demasiado pequeña para recortar", Toast.LENGTH_SHORT).show();
+            if (nuevoAncho >= 50 && nuevoAlto >= 50) {
+                imagenProcesada = Bitmap.createBitmap(imagenProcesada, 0, 0, nuevoAncho, nuevoAlto);
+            } else {
+                Toast.makeText(this, "La imagen es demasiado pequeña para recortar", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            // Recortar la imagen a la mitad
-            imagenOriginal = Bitmap.createBitmap(imagenOriginal, 0, 0, nuevoAncho, nuevoAlto);
         }
 
-        imagenEditada = imagenOriginal;
+        // Guardamos la imagen editada
+        imagenEditada = imagenProcesada;
+
+        // Actualizar la vista con la imagen editada
         imagenVista.setImageBitmap(imagenEditada);
     }
+
 
 
     private void actualizarGaleria(Context context, Uri uri) {
