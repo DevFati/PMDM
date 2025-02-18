@@ -68,6 +68,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.VistaMedio> 
         }
 
         vistaMedio.botonReproducir.setOnClickListener(v -> {
+            ((MainActivity) contexto).detenerAudioSiEsNecesario();
             Intent intent;
             if (medio.obtenerTipo() == 0) {
                 listener.iniciarReproduccionAudio(medio.obtenerUri());

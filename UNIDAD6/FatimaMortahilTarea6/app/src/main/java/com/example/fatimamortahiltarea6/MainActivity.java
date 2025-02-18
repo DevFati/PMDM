@@ -24,15 +24,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private RecyclerView listaRecursos;
-    private MediaAdapter adaptadorMedios;
-    private List<MediaItem> listaMedios = new ArrayList<>();
-    private List<MediaItem> listaFiltrada = new ArrayList<>();
+    private RecyclerView listaRecursos; //RecyclerView para que se vea la lista de medios
+    private MediaAdapter adaptadorMedios; //Este es el adaptador del Recycleriew
+    private List<MediaItem> listaMedios = new ArrayList<>(); //lista completa de medios cargados
+    private List<MediaItem> listaFiltrada = new ArrayList<>(); //lista de medios despues de aplicar los filtros
     private int filtroSeleccionado = 0; // 0 = Todos, 1 = Audio, 2 = Video, 3 = Streaming
 
-    private MediaPlayer reproductor;
-    private MediaController controlador;
-    private ViewGroup contenedorReproductor;
+    private MediaPlayer reproductor; //Mediaplayer para que funcionen los audios.
+    private MediaController controlador; //Controlador de reprodución para el audio
+    private ViewGroup contenedorReproductor; //Contenedor donde se ancla el controlador de audio
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,29 +41,31 @@ public class MainActivity extends AppCompatActivity {
 
         listaRecursos = findViewById(R.id.listaRecursos);
         listaRecursos.setLayoutManager(new LinearLayoutManager(this));
-
+        //Inicializa el adaptador y se lo asigna al RecyclerView
         adaptadorMedios = new MediaAdapter(listaFiltrada, this, this::iniciarReproduccionAudio);
         listaRecursos.setAdapter(adaptadorMedios);
 
-        contenedorReproductor = findViewById(R.id.contenedorReproductor);
-        controlador = new MediaController(this);
+        contenedorReproductor = findViewById(R.id.contenedorReproductor); //Contenedor del reproductor
+        controlador = new MediaController(this); //Crea un nuevo MediaController para la reproduccion de audio
 
-        cargarMediosDesdeJson();
-        cargarFiltro();
+        cargarMediosDesdeJson(); //Carga la lista de medios desde un archivo JSON
+        cargarFiltro(); //Carga la configuración de filtros guardada en preferencias
     }
 
+    //Método que carga la lista de medios desde un archivo JSON en la carpeta "assets"
     private void cargarMediosDesdeJson() {
         try {
-            InputStream entrada = getAssets().open("recursosList.json");
-            int tamaño = entrada.available();
-            byte[] buffer = new byte[tamaño];
-            entrada.read(buffer);
-            entrada.close();
-            String json = new String(buffer, "UTF-8");
+            InputStream entrada = getAssets().open("recursosList.json"); //Abre el archivo JSON
+            int tamaño = entrada.available(); //Obtiene el tamaño del archivo
+            byte[] buffer = new byte[tamaño];// crea un buffer para almacenar los datos
+            entrada.read(buffer); //lee los datos del archivo JSON en el buffer
+            entrada.close(); //aqui cerramos el JSON
+            String json = new String(buffer, "UTF-8"); //Convertimos los datos a String
 
-            JSONObject jsonObject = new JSONObject(json);
-            JSONArray jsonArray = jsonObject.getJSONArray("recursos_list");
-            listaMedios.clear();
+            JSONObject jsonObject = new JSONObject(json); //Crea un objeto JSON desde el string
+            JSONArray jsonArray = jsonObject.getJSONArray("recursos_list"); //Extrae el arreglo de medios
+            listaMedios.clear(); //Limpia la lista antes de cargar los nuevos datos
+            //Iteramos sobre cada elemento del JSON y lo agregamos a la lista de medios
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
                 listaMedios.add(new MediaItem(
@@ -73,21 +75,30 @@ public class MainActivity extends AppCompatActivity {
                         obj.getString("URI"),
                         obj.getString("imagen")));
             }
-            aplicarFiltro();
+            aplicarFiltro(); //Aplicamos el filtro actual después de cargar los medios
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            if(e instanceof IOException){
+                Toast.makeText(this, "No se encontró el archivo JSON", Toast.LENGTH_SHORT).show();
+
+            }else if(e instanceof JSONException){
+                Toast.makeText(this, "JSON vacío", Toast.LENGTH_SHORT).show();
+
+            }
         }
     }
 
+    //Método para iniciar la reproducción de audio
     public void iniciarReproduccionAudio(String uri) {
+        detenerAudioSiEsNecesario(); // nos aseguramos de que no haya otro audio sonando
+        int idRecurso = getResources().getIdentifier(uri, "raw", getPackageName()); //Obtiene el ID del recurso
+        reproductor = MediaPlayer.create(this, idRecurso); //Crea el reproductor con el recurso de audio
         if (reproductor != null) {
-            reproductor.release();
+            reproductor.start();//Se inicia la reproducción del audio
         }
 
-        int idRecurso = getResources().getIdentifier(uri, "raw", getPackageName());
-        reproductor = MediaPlayer.create(this, idRecurso);
-        reproductor.start();
 
+
+        //Configuramos el controlador de audio
         controlador.setAnchorView(contenedorReproductor);
         controlador.setMediaPlayer(new MediaController.MediaPlayerControl() {
             @Override public void start() { if (reproductor != null) reproductor.start(); }
@@ -103,14 +114,24 @@ public class MainActivity extends AppCompatActivity {
             @Override public int getAudioSessionId() { return reproductor != null ? reproductor.getAudioSessionId() : 0; }
         });
 
-        controlador.show(0);
+        controlador.show(0); //Muestra el controlador permanentemente
+    }
+
+
+    public void detenerAudioSiEsNecesario() {
+        if (reproductor != null) {
+            if (reproductor.isPlaying()) {
+                reproductor.pause();
+            }
+
+        }
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
-            controlador.show(2000); //
+            controlador.show(0); //
         }
     }
 
