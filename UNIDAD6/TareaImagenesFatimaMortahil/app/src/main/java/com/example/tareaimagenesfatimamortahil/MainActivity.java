@@ -231,8 +231,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == SOLICITUD_GRABAR_VIDEO) {
             videoUri = data.getData();
             if (videoUri != null) {
-                actualizarGaleria2(this, videoUri);
-                // 🔹 Ahora se usa la velocidad seleccionada en lugar de 1.0f
+                actualizarGaleria(this, videoUri);
                 reproducirVideo();
             } else {
                 Toast.makeText(this, "Error: No se pudo obtener el video", Toast.LENGTH_SHORT).show();
@@ -246,9 +245,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void actualizarGaleria2(Context context, Uri uri) {
+
+    private void actualizarGaleria(Context context, Uri uri) {
         MediaScannerConnection.scanFile(context, new String[]{uri.getPath()}, null, (path, scannedUri) -> {
-            runOnUiThread(() -> Toast.makeText(context, "Video guardado y escaneado", Toast.LENGTH_SHORT).show());
         });
     }
 
@@ -351,10 +350,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void actualizarGaleria(Context context, Uri uri) {
-        MediaScannerConnection.scanFile(context, new String[]{uri.getPath()}, null, (path, scannedUri) -> {
-        });
-    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

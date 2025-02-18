@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <!-- Imagen de portada -->
+    <ImageView
+        android:id="@+id/imagenPortada"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="8dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Imagen de portada"/>
+
+    <!-- Contenedor de nombre e icono -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Nombre del recurso -->
+            <TextView
+                android:id="@+id/textoNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginEnd="4dp"/>
+
+            <!-- Icono del tipo de recurso -->
+            <ImageView
+                android:id="@+id/iconoTipo"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
+                android:contentDescription="Tipo de recurso"/>
+        </LinearLayout>
+
+        <!-- Descripción del recurso -->
+        <TextView
+            android:id="@+id/textoDescripcion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descripción"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
+    <!-- Botón de reproducción -->
+    <Button
+        android:id="@+id/botonReproducir"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="4dp"
+        android:background="@android:drawable/ic_media_play"/>
+</LinearLayout>
