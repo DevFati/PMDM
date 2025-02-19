@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -88,7 +89,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.VistaMedio> 
 
     public static class VistaMedio extends RecyclerView.ViewHolder {
         TextView textoNombre, textoDescripcion;
-        ImageView iconoTipo,imagenPortada;
+        ImageView iconoTipo, imagenPortada;
         Button botonReproducir;
 
         public VistaMedio(View itemVista) {

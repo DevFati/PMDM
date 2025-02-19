@@ -4,15 +4,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.MediaController;
-import android.widget.Toast;
 import android.widget.VideoView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class VideoPlayerActivity extends AppCompatActivity {
     private VideoView vistaVideo;
     private MediaController controlador;
     private Button botonVolver;
-    private boolean actividadActiva = true; // Variable para saber si la actividad sigue activa
+    private boolean actividadActiva = true; // Controla si la actividad sigue activa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,73 +20,72 @@ public class VideoPlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_video_player);
 
         vistaVideo = findViewById(R.id.vistaVideo);
-        String uri = getIntent().getStringExtra("URI");
         botonVolver = findViewById(R.id.botonVolver);
+
+        String uri = getIntent().getStringExtra("URI");
 
         controlador = new MediaController(this);
         controlador.setAnchorView(vistaVideo);
+        controlador.setMediaPlayer(vistaVideo); // Vincula el controlador con el VideoView
         vistaVideo.setMediaController(controlador);
 
         Uri uriParseada = Uri.parse(uri);
-        String esquema = uriParseada.getScheme(); // Obtiene el esquema de la URI
+        String esquema = uriParseada.getScheme();
 
         if (esquema != null) {
-            // Si es un video en streaming
             vistaVideo.setVideoURI(uriParseada);
         } else {
-            // Si es un video local en raw/
             int idRecurso = getResources().getIdentifier(uri, "raw", getPackageName());
             if (idRecurso != 0) {
                 vistaVideo.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + idRecurso));
-            } else {
-                Toast.makeText(this, "No se encontró el archivo de video", Toast.LENGTH_SHORT).show();
             }
         }
 
-        vistaVideo.setOnPreparedListener(mp -> vistaVideo.start());
+        vistaVideo.setOnPreparedListener(mp -> {
+            vistaVideo.start();
+            controlador.show(0); //  muestra el controlador FIJO al iniciar el video
+        });
 
         botonVolver.setOnClickListener(v -> finish());
 
-        actividadActiva=true;
+        actividadActiva = true; // Marca la actividad como activa
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus && controlador!=null && actividadActiva ) {
-            controlador.show(0); //
+
+        //  Solo que se vea  el controlador si la actividad sigue activa y el video está reproduciendo
+        if (hasFocus && actividadActiva && controlador != null && vistaVideo.isPlaying()) {
+            controlador.show(0);
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        actividadActiva = false;
+
+        //  Oculta el controlador al salir de la pantalla
+        if (controlador != null) {
+            controlador.hide();
+        }
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        actividadActiva = false;
 
-// Detener la reproducción del video si aún está en curso
-        if (vistaVideo != null) {
-            vistaVideo.suspend();
-        }
-        // Asegurar que el MediaController ya no intente mostrarse
+        actividadActiva = false; // Marca la actividad como cerrada
+
         if (controlador != null) {
             controlador.hide();
-            controlador.setAnchorView(null);
+            controlador.setAnchorView(null); //  DESVINCULA EL CONTROLADOR
             controlador = null;
         }
 
-
-
+        if (vistaVideo != null) {
+            vistaVideo.stopPlayback(); //  DETENEMOOS LA REPRODUCCIÓN COMPLETAMENTE
+        }
     }
-
-    @Override
-    protected void onStop(){
-
-        super.onStop();
-
-        actividadActiva = false;
-
-    }
-
-
 }

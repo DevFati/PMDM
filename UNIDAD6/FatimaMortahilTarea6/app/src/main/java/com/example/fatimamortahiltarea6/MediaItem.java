@@ -15,9 +15,23 @@ public class MediaItem {
         this.imagen = imagen;
     }
 
-    public String obtenerNombre() { return nombre; }
-    public String obtenerDescripcion() { return descripcion; }
-    public int obtenerTipo() { return tipo; }
-    public String obtenerUri() { return uri; }
-    public String obtenerImagen() { return imagen; }
+    public String obtenerNombre() {
+        return nombre;
+    }
+
+    public String obtenerDescripcion() {
+        return descripcion;
+    }
+
+    public int obtenerTipo() {
+        return tipo;
+    }
+
+    public String obtenerUri() {
+        return uri;
+    }
+
+    public String obtenerImagen() {
+        return imagen;
+    }
 }

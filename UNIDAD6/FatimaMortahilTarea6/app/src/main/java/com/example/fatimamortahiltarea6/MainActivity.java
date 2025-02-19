@@ -77,10 +77,10 @@ public class MainActivity extends AppCompatActivity {
             }
             aplicarFiltro(); //Aplicamos el filtro actual después de cargar los medios
         } catch (IOException | JSONException e) {
-            if(e instanceof IOException){
+            if (e instanceof IOException) {
                 Toast.makeText(this, "No se encontró el archivo JSON", Toast.LENGTH_SHORT).show();
 
-            }else if(e instanceof JSONException){
+            } else if (e instanceof JSONException) {
                 Toast.makeText(this, "JSON vacío", Toast.LENGTH_SHORT).show();
 
             }
@@ -97,21 +97,63 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
         //Configuramos el controlador de audio
         controlador.setAnchorView(contenedorReproductor);
         controlador.setMediaPlayer(new MediaController.MediaPlayerControl() {
-            @Override public void start() { if (reproductor != null) reproductor.start(); }
-            @Override public void pause() { if (reproductor != null) reproductor.pause(); }
-            @Override public int getDuration() { return reproductor != null ? reproductor.getDuration() : 0; }
-            @Override public int getCurrentPosition() { return reproductor != null ? reproductor.getCurrentPosition() : 0; }
-            @Override public void seekTo(int pos) { if (reproductor != null) reproductor.seekTo(pos); }
-            @Override public boolean isPlaying() { return reproductor != null && reproductor.isPlaying(); }
-            @Override public int getBufferPercentage() { return 0; }
-            @Override public boolean canPause() { return true; }
-            @Override public boolean canSeekBackward() { return true; }
-            @Override public boolean canSeekForward() { return true; }
-            @Override public int getAudioSessionId() { return reproductor != null ? reproductor.getAudioSessionId() : 0; }
+            @Override
+            public void start() {
+                if (reproductor != null) reproductor.start();
+            }
+
+            @Override
+            public void pause() {
+                if (reproductor != null) reproductor.pause();
+            }
+
+            @Override
+            public int getDuration() {
+                return reproductor != null ? reproductor.getDuration() : 0;
+            }
+
+            @Override
+            public int getCurrentPosition() {
+                return reproductor != null ? reproductor.getCurrentPosition() : 0;
+            }
+
+            @Override
+            public void seekTo(int pos) {
+                if (reproductor != null) reproductor.seekTo(pos);
+            }
+
+            @Override
+            public boolean isPlaying() {
+                return reproductor != null && reproductor.isPlaying();
+            }
+
+            @Override
+            public int getBufferPercentage() {
+                return 0;
+            }
+
+            @Override
+            public boolean canPause() {
+                return true;
+            }
+
+            @Override
+            public boolean canSeekBackward() {
+                return true;
+            }
+
+            @Override
+            public boolean canSeekForward() {
+                return true;
+            }
+
+            @Override
+            public int getAudioSessionId() {
+                return reproductor != null ? reproductor.getAudioSessionId() : 0;
+            }
         });
 
         controlador.show(0); //Muestra el controlador permanentemente
@@ -131,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
-            controlador.show(0); //
+            controlador.show(0);
         }
     }
 
@@ -176,17 +218,20 @@ public class MainActivity extends AppCompatActivity {
     private void mostrarDialogoFiltro() {
         String[] opciones = {"Todos", "Audio", "Video", "Streaming"};
 
-        new AlertDialog.Builder(this)
-                .setTitle("Selecciona el tipo de recurso")
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Selecciona el tipo de recurso")
                 .setSingleChoiceItems(opciones, filtroSeleccionado, (dialog, which) -> filtroSeleccionado = which)
                 .setPositiveButton("Aceptar", (dialog, which) -> {
                     guardarFiltro();
                     aplicarFiltro();
                     Toast.makeText(this, "Filtro aplicado", Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("Cancelar", null)
-                .show();
+                .setCancelable(false); // Evita que se pueda cerrar pulsando fuera
+
+        AlertDialog dialogo = builder.create();
+        dialogo.show();
     }
+
 
     @Override
     protected void onDestroy() {
