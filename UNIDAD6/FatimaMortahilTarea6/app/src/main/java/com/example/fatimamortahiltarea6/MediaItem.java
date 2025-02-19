@@ -3,7 +3,7 @@ package com.example.fatimamortahiltarea6;
 public class MediaItem {
     private String nombre;
     private String descripcion;
-    private int tipo;
+    private int tipo; //Tipo del medio, 0 es audio, 1 video y 2 streaming
     private String uri;
     private String imagen;
 

@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Configuramos el controlador de audio
         controlador.setAnchorView(contenedorReproductor);
+
         controlador.setMediaPlayer(new MediaController.MediaPlayerControl() {
             @Override
             public void start() {
@@ -156,10 +157,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        controlador.show(0); //Muestra el controlador permanentemente
+        controlador.show(0); //mostramos el controlador permanentemente
     }
 
-
+//Con esto lo que hacemos es que si el reproductor existe y esta sonando, lo pausamos.
     public void detenerAudioSiEsNecesario() {
         if (reproductor != null) {
             if (reproductor.isPlaying()) {
@@ -169,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Cuando la ventana gana el foco, se vuelve a ver el controlador de reproduccion.
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -177,22 +179,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     private void aplicarFiltro() {
         listaFiltrada.clear();
-        for (MediaItem medio : listaMedios) {
+        for (MediaItem medio : listaMedios) { //si el filtro es todos, se agregan todos. Sino solo se agregan los del tipo seleccionado.
             if (filtroSeleccionado == 0 || medio.obtenerTipo() == filtroSeleccionado - 1) {
                 listaFiltrada.add(medio);
             }
         }
+        //Se notifica al adaptador que los datos han cambiado para que se actualice la interfaz
         adaptadorMedios.notifyDataSetChanged();
     }
 
+    //Se obtienen las preferencias guardadas y se carga el filtro que se haya seleccionado.
     private void cargarFiltro() {
         SharedPreferences prefs = getSharedPreferences("Preferencias", MODE_PRIVATE);
         filtroSeleccionado = prefs.getInt("Filtro", 0);
         aplicarFiltro();
     }
 
+    //Guarda la opcion del filtro en sharedpreferences
     private void guardarFiltro() {
         SharedPreferences prefs = getSharedPreferences("Preferencias", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -200,12 +206,14 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    //Infla el menu de filtros en la barra de opciones
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_filtro, menu);
         return true;
     }
 
+    //Si se selecciona la opcion de filtro en el menu, se muestra un cuadro de dialogo.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_filtro) {
@@ -216,8 +224,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void mostrarDialogoFiltro() {
-        String[] opciones = {"Todos", "Audio", "Video", "Streaming"};
-
+        String[] opciones = {"Todos", "Audio", "Video", "Streaming"};     //Se definen las opciones disponibles en el filtro.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Selecciona el tipo de recurso")
                 .setSingleChoiceItems(opciones, filtroSeleccionado, (dialog, which) -> filtroSeleccionado = which)
@@ -232,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         dialogo.show();
     }
 
-
+//Libera los recursos del reproductor al cerrar la actividad para evitar fugas de memoria.
     @Override
     protected void onDestroy() {
         super.onDestroy();

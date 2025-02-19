@@ -18,14 +18,16 @@ import java.io.InputStream;
 import java.util.List;
 
 public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.VistaMedio> {
-    private List<MediaItem> listaMedios;
-    private Context contexto;
-    private OnAudioPlayListener listener;
+    private List<MediaItem> listaMedios; //Listaque almacena los elementos de multimedia
+    private Context contexto; //Contexto de la aplicación
+    private OnAudioPlayListener listener; //Interfaz para manejar la reproducción del audio
 
+    //Interfaz para notificar la reproducción de audio
     public interface OnAudioPlayListener {
         void iniciarReproduccionAudio(String uri);
     }
 
+    //Constructor de la clase
     public MediaAdapter(List<MediaItem> listaMedios, Context contexto, OnAudioPlayListener listener) {
         this.listaMedios = listaMedios;
         this.contexto = contexto;
@@ -42,10 +44,12 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.VistaMedio> 
 
     @Override
     public void onBindViewHolder(@NonNull VistaMedio vistaMedio, int posicion) {
+        //Obtiene el elemento de la lista en la posicion actual
         MediaItem medio = listaMedios.get(posicion);
+        //Asigna el nombre y la descripcion al textview
         vistaMedio.textoNombre.setText(medio.obtenerNombre());
         vistaMedio.textoDescripcion.setText(medio.obtenerDescripcion());
-
+        //Segun el tipo de medio, asignamos un icono u otro
         int iconoRecurso;
         switch (medio.obtenerTipo()) {
             case 1:
@@ -67,16 +71,16 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.VistaMedio> 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        //boton para el play de cada medio
         vistaMedio.botonReproducir.setOnClickListener(v -> {
             ((MainActivity) contexto).detenerAudioSiEsNecesario();
             Intent intent;
-            if (medio.obtenerTipo() == 0) {
+            if (medio.obtenerTipo() == 0) { //si es un audio
                 listener.iniciarReproduccionAudio(medio.obtenerUri());
-            } else {
+            } else { //si es video o streaming
                 intent = new Intent(contexto, VideoPlayerActivity.class);
                 intent.putExtra("URI", medio.obtenerUri());
-                contexto.startActivity(intent);
+                contexto.startActivity(intent); //iniciamos la actividad para empezar el video
             }
 
         });
@@ -85,7 +89,8 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.VistaMedio> 
     @Override
     public int getItemCount() {
         return listaMedios.size();
-    }
+    } //Devuelve los elementos de la lista
+
 
     public static class VistaMedio extends RecyclerView.ViewHolder {
         TextView textoNombre, textoDescripcion;
